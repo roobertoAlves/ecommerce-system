@@ -1,3 +1,5 @@
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { JetBrains_Mono } from "next/font/google";
@@ -27,7 +29,11 @@ export default function RootLayout({
       lang="en"
       className={cn("h-full", "font-mono", jetbrainsMono.variable)}
     >
-      <body className="font-poppins antialiased">{children}</body>
+      <body className="font-poppins antialiased">
+        <Header />
+        {children}
+        <Footer />
+      </body>
     </html>
   );
 }

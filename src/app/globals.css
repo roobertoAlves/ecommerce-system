@@ -36,7 +36,7 @@
   --text-primary: #1e1b4b;
   --text-secondary: #4338ca;
   --text-muted: #6b7280;
-  --border: oklch(0.922 0 0);
+  --border: #c4b5fd;
   --btn-primary: #6c3fc5;
   --btn-primary-hover: #4a1fa8;
   --btn-secondary: #3b6fd4;
@@ -45,37 +45,37 @@
   --highlight-alt: #38bdf8;
   --success: #34d399;
   --danger: #f43f5e;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --background: #f5f3ff;
+  --foreground: #1e1b4b;
+  --card: #ffffff;
+  --card-foreground: #1e1b4b;
+  --popover: #ffffff;
+  --popover-foreground: #1e1b4b;
+  --primary: #6c3fc5;
+  --primary-foreground: #ffffff;
+  --secondary: #3b6fd4;
+  --secondary-foreground: #ffffff;
+  --muted: #ede9fe;
+  --muted-foreground: #6b7280;
+  --accent: #a855f7;
+  --accent-foreground: #ffffff;
   --destructive: oklch(0.577 0.245 27.325);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
+  --input: #c4b5fd;
+  --ring: #6c3fc5;
+  --chart-1: #6c3fc5;
+  --chart-2: #3b6fd4;
+  --chart-3: #a855f7;
+  --chart-4: #38bdf8;
+  --chart-5: #4a1fa8;
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar: #ede9fe;
+  --sidebar-foreground: #1e1b4b;
+  --sidebar-primary: #6c3fc5;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #eef2ff;
+  --sidebar-accent-foreground: #1e1b4b;
+  --sidebar-border: #c4b5fd;
+  --sidebar-ring: #6c3fc5;
 }
 
 /* Tema Noturno */
@@ -199,6 +199,12 @@
     @apply bg-background text-foreground;
   }
   html {
-    @apply font-mono;
+    @apply font-poppins;
   }
+  .hoverEffect {
+    @apply transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg;
+  }
+}
+button {
+  @apply hover:cursor-pointer;
 }
