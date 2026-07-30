@@ -16,7 +16,7 @@ const Header = () => {
           <Logo />
         </div>
         <HeaderMenu />
-        <div className="w-auto md:w-1/3 flex items-center justify-end gap-5 md:gap-0">
+        <div className="w-auto md:w-1/3 flex items-center gap-5 justify-end">
           <SearchBar />
           <CartIcon />
           <FavoriteButton />

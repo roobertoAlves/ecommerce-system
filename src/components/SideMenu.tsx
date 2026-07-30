@@ -25,14 +25,14 @@ const SideMenu: React.FC<SideBarProps> = ({ isOpen, onClose }) => {
     >
       <div
         className={cn(
-          "absolute inset-0 bg-black/50 transition-opacity duration-300",
+          "absolute inset-0 bg-black/50 transition-opacity duration-300 -z-10",
           isOpen ? "opacity-100" : "opacity-0",
         )}
         onClick={onClose}
       />
       <div
         className={cn(
-          "absolute inset-y-0 left-0 min-w-72 max-w-96 bg-surface h-screen p-10 border-r border-r-primary/30 flex flex-col gap-6 transition-transform duration-300",
+          "absolute inset-y-0 left-0 min-w-72 max-w-96 bg-surface h-screen p-10 border-r border-r-primary/30 flex flex-col gap-6 transition-transform duration-300 z-10 overflow-y-auto",
           isOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >

@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn("h-full", "font-mono", jetbrainsMono.variable)}
+      className={cn("h-full", jetbrainsMono.variable)}
     >
       <body className="font-poppins antialiased">
         <Header />
