@@ -3,7 +3,7 @@ import { SignInButton } from "@clerk/nextjs";
 const SignIn = () => {
   return (
     <SignInButton mode="modal">
-      <button className="text-sm font-semibold text-text-muted hover:text-primary hover:cursor-pointer transition-colors duration-300">
+      <button className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-semibold bg-primary text-white hover:bg-primary-dark transition-colors duration-300 shadow-sm hover:shadow-md">
         Login
       </button>
     </SignInButton>

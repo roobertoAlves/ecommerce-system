@@ -5,15 +5,15 @@ import { Title } from "./ui/text";
 
 const HomeBanner = () => {
   return (
-    <div className="py-16 md:py-0 bg-shop_light_pink rounded-lg px-10 lg:px-24 flex items-center justify-between">
+    <div className="py-16 md:py-0 bg-bg-secondary rounded-2xl px-10 lg:px-24 flex items-center justify-between border border-border">
       <div className="space-y-5">
-        <Title>
+        <Title className="text-text-primary">
           Grab Upto 50% off on <br />
           Selected Items
         </Title>
         <Link
           href="/shop"
-          className="bg-shop_dark_green/90 text-white/90 px-5 py-2 rounded-md text-sm font-semibold hover:text-white hover:bg-shop_dark_green hoverEffect"
+          className="inline-flex items-center gap-2 bg-btn-primary text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-btn-primary-hover transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 font-poppins"
         >
           Shop Now
         </Link>
