@@ -197,7 +197,9 @@
   body {
     @apply bg-background text-foreground font-poppins;
   }
-  h1, h2, h3 {
+  h1,
+  h2,
+  h3 {
     @apply font-poppins font-semibold;
   }
   .font-heading {
@@ -214,4 +216,8 @@
 body {
   @apply bg-background text-foreground;
   font-family: var(--font-poppins);
+}
+
+.scrollbar-hide ::-webkit-scrollbar {
+  display: none;
 }

@@ -1,4 +1,4 @@
-import { Category } from "../../../sanity.types";
+import { Category, Product } from "../../../sanity.types";
 import { sanityFetch } from "../lib/live";
 import {
   BRAND_QUERY,
@@ -62,7 +62,7 @@ const getProductBySlug = async (slug: string) => {
         slug,
       },
     });
-    return product?.data || null;
+    return (product?.data as Product) || null;
   } catch (error) {
     console.log("Error fetching product by ID: ", error);
     return null;
