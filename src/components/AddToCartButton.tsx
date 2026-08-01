@@ -5,7 +5,7 @@ import { ShoppingBag } from "lucide-react";
 import { Button } from "./ui/button";
 
 interface Props {
-  product: Product;
+  product: Product | null | undefined;
   className?: string;
 }
 const AddToCartButton = ({ product, className }: Props) => {
@@ -14,18 +14,16 @@ const AddToCartButton = ({ product, className }: Props) => {
     window.alert("Added to cart!");
   };
   return (
-    <div>
-      <Button
-        onClick={handleAddToCart}
-        disabled={isOutOfStock}
-        className={cn(
-          "w-full bg-primary/80 text-primary-foreground shadow-none border border-primary/80 font-semibold tracking-wide hover:bg-primary hover:border-primary hoverEffect",
-          className,
-        )}
-      >
-        <ShoppingBag /> {isOutOfStock ? "Out of Stock" : "Add to Cart"}
-      </Button>
-    </div>
+    <Button
+      onClick={handleAddToCart}
+      disabled={isOutOfStock}
+      className={cn(
+        "w-full bg-primary/80 text-primary-foreground shadow-none border border-primary/80 font-semibold tracking-wide hover:bg-primary hover:border-primary transition-all duration-300 ease-in-out hover:shadow-lg",
+        className,
+      )}
+    >
+      <ShoppingBag /> {isOutOfStock ? "Out of Stock" : "Add to Cart"}
+    </Button>
   );
 };
 
