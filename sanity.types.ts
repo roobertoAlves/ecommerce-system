@@ -430,3 +430,91 @@ export type AllSanitySchemaTypes =
   | SanityAssetSourceData
   | SanityImageAsset
   | Geopoint;
+
+// Source: src/components/ProductGrid.tsx
+// Variable: query
+// Query: *[_type == "product" && variant == $variant] | order(name asc){  ...,"categories": categories[]->title}
+export type QueryResult = Array<{
+  _id: string;
+  _type: "product";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name?: string;
+  slug?: Slug;
+  images?: Array<{
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+    _key: string;
+  }>;
+  description?: string;
+  price?: number;
+  discount?: number;
+  categories: Array<string | null> | null;
+  stock?: number;
+  brand?: BrandReference;
+  status?: "hot" | "new" | "sale";
+  variant?: "appliances" | "gadget" | "others" | "refrigerators";
+  isFeatured?: boolean;
+}>;
+
+// Source: src/sanity/queries/query.ts
+// Variable: BRANDS_QUERY
+// Query: *[_type == "brand"] | order(name asc)
+export type BRANDS_QUERY_RESULT = Array<{
+  _id: string;
+  _type: "brand";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  slug?: Slug;
+  description?: string;
+  image?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+}>;
+
+// Source: src/sanity/queries/query.ts
+// Variable: LATEST_BLOG_QUERY
+// Query: *[_type == "blog" && isLatest == true] | order(name desc){ ..., blogcategories[]->{ title } }
+export type LATEST_BLOG_QUERY_RESULT = Array<{
+  _id: string;
+  _type: "blog";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  slug?: Slug;
+  author?: AuthorReference;
+  mainImage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  blogcategories: Array<{
+    title: string | null;
+  }> | null;
+  publishedAt?: string;
+  isLatest: true;
+  body?: BlockContent;
+}>;
+
+// Query TypeMap
+import "@sanity/client";
+declare module "@sanity/client" {
+  interface SanityQueries {
+    '*[_type == "product" && variant == $variant] | order(name asc){\n  ...,"categories": categories[]->title\n}': QueryResult;
+    ' *[_type == "brand"] | order(name asc)': BRANDS_QUERY_RESULT;
+    ' *[_type == "blog" && isLatest == true] | order(name desc){ ..., blogcategories[]->{ title } }': LATEST_BLOG_QUERY_RESULT;
+  }
+}

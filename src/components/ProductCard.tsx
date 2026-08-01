@@ -1,14 +1,17 @@
+"use client";
 import { Product } from "@/sanity.types";
 import { urlFor } from "@/sanity/lib/image";
 import { FlameIcon, StarIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import AddToCartButton from "./AddToCartButton";
 import AddToWishlistButton from "./AddToWishlistButton";
 import PriceView from "./PriceView";
 import { Title } from "./ui/text";
 
 const ProductCard = ({ product }: { product: Product }) => {
+  const [imgLoaded, setImgLoaded] = useState(false);
   return (
     <div className="text-sm border border-border rounded-md bg-surface group">
       <div className="relative group overflow-hidden bg-product-bg">
@@ -16,13 +19,13 @@ const ProductCard = ({ product }: { product: Product }) => {
           <Image
             src={urlFor(product?.images[0]).url()}
             alt="ProductImage"
-            loading="lazy"
             width={700}
             height={700}
-            className={`w-full h-64 object-contain overflow-hidden transition-transform
-              bg-product-bg hoverEffect ${
+            onLoad={() => setImgLoaded(true)}
+            className={`w-full h-64 object-contain overflow-hidden transition-all duration-500
+              bg-product-bg ${
                 product?.stock !== 0 ? "group-hover:scale-105" : "opacity-50"
-              }`}
+              } ${imgLoaded ? "opacity-100" : "opacity-0"}`}
           />
         )}
         {product?.status == "new" && (
