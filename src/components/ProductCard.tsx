@@ -16,17 +16,19 @@ const ProductCard = ({ product }: { product: Product }) => {
     <div className="text-sm border border-border rounded-md bg-surface group">
       <div className="relative group overflow-hidden bg-product-bg">
         {product?.images && (
-          <Image
-            src={urlFor(product?.images[0]).url()}
-            alt="ProductImage"
-            width={700}
-            height={700}
-            onLoad={() => setImgLoaded(true)}
-            className={`w-full h-64 object-contain overflow-hidden transition-all duration-500
-              bg-product-bg ${
-                product?.stock !== 0 ? "group-hover:scale-105" : "opacity-50"
-              } ${imgLoaded ? "opacity-100" : "opacity-0"}`}
-          />
+          <Link href={`/product/${product?.slug?.current}`}>
+            <Image
+              src={urlFor(product?.images[0]).url()}
+              alt="ProductImage"
+              width={700}
+              height={700}
+              onLoad={() => setImgLoaded(true)}
+              className={`w-full h-64 object-contain overflow-hidden transition-all duration-500
+                bg-product-bg ${
+                  product?.stock !== 0 ? "group-hover:scale-105" : "opacity-50"
+                } ${imgLoaded ? "opacity-100" : "opacity-0"}`}
+            />
+          </Link>
         )}
         {product?.status == "new" && (
           <p
@@ -67,7 +69,9 @@ const ProductCard = ({ product }: { product: Product }) => {
             {product?.categories.map((cat) => cat).join(",")}
           </p>
         )}
-        <Title className="text-sm line-clamp-1 font-poppins">{product?.name}</Title>
+        <Title className="text-sm line-clamp-1 font-poppins">
+          {product?.name}
+        </Title>
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-0.5">
             {[...Array(5)].map((_, index) => (
@@ -86,7 +90,9 @@ const ProductCard = ({ product }: { product: Product }) => {
           <p
             className={`${product?.stock === 0 ? "text-danger" : "text-accent font-semibold"}`}
           >
-            {(product?.stock as number) > 0 ? product?.stock : "Unavailable"}{" "}
+            {(product?.stock as number) > 0
+              ? product?.stock
+              : "Unavailable"}{" "}
           </p>
         </div>
         <PriceView price={product?.price} discount={product?.discount} />
