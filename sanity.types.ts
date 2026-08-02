@@ -18,11 +18,14 @@ export declare const internalGroqTypeReferenceTo: unique symbol;
 export type Address = {
   _type: "address";
   name?: string;
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
   email?: string;
   address?: string;
   city?: string;
   state?: string;
-  ZIP?: string;
+  zip?: string;
   default?: boolean;
   createdAt?: string;
 };
