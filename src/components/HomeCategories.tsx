@@ -12,7 +12,10 @@ const HomeCategories = ({ categories }: { categories: Category[] }) => {
         {categories?.map((category) => (
           <Link
             key={category?._id}
-            href={`/category/${category?.slug?.current}`}
+            href={{
+              pathname: "/shop",
+              query: { category: category?.slug?.current },
+            }}
             className="bg-bg-secondary p-5 flex items-center gap-3 group rounded-sm hover:bg-primary/10 transition-colors duration-300"
           >
             {category?.image && (
@@ -27,7 +30,9 @@ const HomeCategories = ({ categories }: { categories: Category[] }) => {
               </div>
             )}
             <div className="space-y-1">
-              <h3 className="text-base font-semibold group-hover:text-primary transition-colors duration-300">{category?.title}</h3>
+              <h3 className="text-base font-semibold group-hover:text-primary transition-colors duration-300">
+                {category?.title}
+              </h3>
               <p className="text-sm">
                 <span className="font-bold text-primary">{`(${category?.productCount})`}</span>{" "}
                 items Available

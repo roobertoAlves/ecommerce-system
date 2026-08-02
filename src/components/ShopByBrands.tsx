@@ -46,7 +46,7 @@ const ShopByBrands = async () => {
         {brands?.map((brand) => (
           <Link
             key={brand?._id}
-            href={`/brand/${brand?.slug?.current}`}
+            href={{ pathname: "/shop", query: { brand: brand?.slug?.current } }}
             className="bg-surface w-34 h-24 flex items-center justify-center rounded-md overflow-hidden hover:shadow-lg shadow-primary/20 hoverEffect"
           >
             {brand?.image && (

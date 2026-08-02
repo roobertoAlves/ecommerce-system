@@ -1,49 +1,50 @@
 import { BRANDS_QUERYResult } from "@/sanity.types";
+import { Check } from "lucide-react";
 import Title from "../Title";
-import { Label } from "../ui/label";
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 
 interface Props {
   brands: BRANDS_QUERYResult;
-  selectedBrand: string | null;
-  setSelectedBrand: React.Dispatch<React.SetStateAction<string | null>>;
+  selectedBrands: string[];
+  setSelectedBrands: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-const BrandList = ({ brands, selectedBrand, setSelectedBrand }: Props) => {
+const BrandList = ({ brands, selectedBrands, setSelectedBrands }: Props) => {
+  const toggle = (slug: string) =>
+    setSelectedBrands((prev) =>
+      prev.includes(slug) ? prev.filter((s) => s !== slug) : [...prev, slug]
+    );
+
   return (
     <div className="w-full p-5">
       <Title className="text-base font-black text-text-primary">Brands</Title>
-      <RadioGroup value={selectedBrand || ""} className="mt-2 space-y-1">
-        {brands?.map((brand) => (
-          <div
-            key={brand?._id}
-            onClick={() => {
-              setSelectedBrand(brand?.slug?.current as string);
-            }}
-            className="flex items-center space-x-2 hover:cursor-pointer"
-          >
-            <RadioGroupItem
-              value={brand?.slug?.current as string}
-              id={brand?.slug?.current}
-              className="rounded-sm"
-            />
-            <Label
-              htmlFor={brand?.slug?.current}
-              className={`${selectedBrand === brand?.slug?.current ? "font-semibold text-primary" : "font-normal text-text-primary"}`}
+      <div className="mt-2 space-y-1">
+        {brands?.map((brand) => {
+          const slug = brand?.slug?.current as string;
+          const isSelected = selectedBrands.includes(slug);
+          return (
+            <div
+              key={brand._id}
+              onClick={() => toggle(slug)}
+              className="flex items-center space-x-2 cursor-pointer group"
             >
-              {brand?.title}
-            </Label>
-          </div>
-        ))}
-        {selectedBrand && (
+              <span className={`w-4 h-4 rounded-sm border shrink-0 flex items-center justify-center transition-colors ${isSelected ? "bg-primary border-primary" : "border-border group-hover:border-primary"}`}>
+                {isSelected && <Check size={11} className="text-white" strokeWidth={3} />}
+              </span>
+              <span className={`text-sm ${isSelected ? "font-semibold text-primary" : "font-normal text-text-primary"}`}>
+                {brand?.title}
+              </span>
+            </div>
+          );
+        })}
+        {selectedBrands.length > 0 && (
           <button
-            onClick={() => setSelectedBrand(null)}
+            onClick={() => setSelectedBrands([])}
             className="text-sm font-medium mt-2 underline underline-offset-2 decoration-[1px] text-text-primary hover:text-primary hoverEffect text-left"
           >
             Reset Selection
           </button>
         )}
-      </RadioGroup>
+      </div>
     </div>
   );
 };

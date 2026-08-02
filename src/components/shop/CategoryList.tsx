@@ -1,53 +1,62 @@
 import { Category } from "@/sanity.types";
+import { Check } from "lucide-react";
 import Title from "../Title";
-import { Label } from "../ui/label";
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 
 interface Props {
   categories: Category[];
-  selectedCategory: string | null;
-  setSelectedCategory: React.Dispatch<React.SetStateAction<string | null>>;
+  selectedCategories: string[];
+  setSelectedCategories: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 const CategoryList = ({
   categories,
-  selectedCategory,
-  setSelectedCategory,
+  selectedCategories,
+  setSelectedCategories,
 }: Props) => {
+  const toggle = (slug: string) =>
+    setSelectedCategories((prev) =>
+      prev.includes(slug) ? prev.filter((s) => s !== slug) : [...prev, slug],
+    );
+
   return (
     <div className="w-full p-5">
-      <Title className="text-base font-black text-text-primary">Product Categories</Title>
-      <RadioGroup value={selectedCategory || ""} className="mt-2 space-y-1">
-        {categories.map((category) => (
-          <div
-            onClick={() => {
-              setSelectedCategory(category?.slug?.current as string);
-            }}
-            key={category?._id}
-            className="flex items-center space-x-2 hover:cursor-pointer"
-          >
-            <RadioGroupItem
-              value={category?.slug?.current as string}
-              id={category?.slug?.current}
-              className="rounded-sm"
-            />
-            <Label
-              htmlFor={category?.slug?.current}
-              className={`${selectedCategory === category?.slug?.current ? "font-semibold text-primary" : "font-normal text-text-primary"}`}
+      <Title className="text-base font-black text-text-primary">
+        Product Categories
+      </Title>
+      <div className="mt-2 space-y-1">
+        {categories.map((category) => {
+          const slug = category?.slug?.current as string;
+          const isSelected = selectedCategories.includes(slug);
+          return (
+            <div
+              key={category._id}
+              onClick={() => toggle(slug)}
+              className="flex items-center space-x-2 cursor-pointer group"
             >
-              {category?.title}
-            </Label>
-          </div>
-        ))}
-        {selectedCategory && (
+              <span
+                className={`w-4 h-4 rounded-sm border shrink-0 flex items-center justify-center transition-colors ${isSelected ? "bg-primary border-primary" : "border-border group-hover:border-primary"}`}
+              >
+                {isSelected && (
+                  <Check size={11} className="text-white" strokeWidth={3} />
+                )}
+              </span>
+              <span
+                className={`text-sm ${isSelected ? "font-semibold text-primary" : "font-normal text-text-primary"}`}
+              >
+                {category.title}
+              </span>
+            </div>
+          );
+        })}
+        {selectedCategories.length > 0 && (
           <button
-            onClick={() => setSelectedCategory(null)}
-            className="text-sm font-medium mt-2 underline underline-offset-2 decoration-[1px] text-text-primary hover:text-primary hoverEffect text-left"
+            onClick={() => setSelectedCategories([])}
+            className="text-sm font-medium mt-2 underline underline-offset-2 decoration-1 text-text-primary hover:text-primary hoverEffect text-left"
           >
             Reset Selection
           </button>
         )}
-      </RadioGroup>
+      </div>
     </div>
   );
 };

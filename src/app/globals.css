@@ -218,6 +218,11 @@ body {
   font-family: var(--font-poppins);
 }
 
-.scrollbar-hide ::-webkit-scrollbar {
+::-webkit-scrollbar {
   display: none;
+}
+
+* {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
