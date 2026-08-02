@@ -14,7 +14,7 @@ const DealPage = async () => {
         </Title>
         <div>
           {products?.map((product) => (
-            //@ts-expect-error
+            {/* @ts-expect-error -- getDealProducts returns a partial type incompatible with ProductCard's Product prop */}
             <ProductCard key={product?._id} product={product} />
           ))}
         </div>

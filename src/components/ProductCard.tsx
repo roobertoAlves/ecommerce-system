@@ -6,8 +6,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import AddToCartButton from "./AddToCartButton";
-import AddToWishlistButton from "./AddToWishlistButton";
 import PriceView from "./PriceView";
+import ProductSideMenu from "./ProductSideMenu";
 import { Title } from "./ui/text";
 
 const ProductCard = ({ product }: { product: Product }) => {
@@ -30,16 +30,7 @@ const ProductCard = ({ product }: { product: Product }) => {
             />
           </Link>
         )}
-        {product?.status == "new" && (
-          <p
-            className="absolute top-2 left-2 z-10 text-xs border border-primary/50 text-primary
-          px-2 rounded-full
-          group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground hoverEffect"
-          >
-            New Arrival!
-          </p>
-        )}
-        <AddToWishlistButton product={product} />
+        <ProductSideMenu product={product} />
         {product?.status == "sale" && (
           <p
             className="absolute top-2 left-2 z-10 text-xs border border-secondary/50 text-secondary
@@ -47,6 +38,15 @@ const ProductCard = ({ product }: { product: Product }) => {
           group-hover:border-secondary group-hover:bg-secondary group-hover:text-primary-foreground hoverEffect"
           >
             Sale!
+          </p>
+        )}
+        {product?.status == "new" && (
+          <p
+            className="absolute top-2 left-2 z-10 text-xs border border-primary/50 text-primary
+          px-2 rounded-full
+          group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground hoverEffect"
+          >
+            New Arrival!
           </p>
         )}
         {product?.status === "hot" && (

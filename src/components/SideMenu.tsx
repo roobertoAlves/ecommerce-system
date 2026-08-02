@@ -1,6 +1,5 @@
 "use client";
 import { headerData } from "@/constants/data";
-import { useOutsideClck } from "@/hooks";
 import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
 import Link from "next/link";
@@ -15,7 +14,6 @@ interface SideBarProps {
 
 const SideMenu: React.FC<SideBarProps> = ({ isOpen, onClose }) => {
   const pathname = usePathname();
-  const sidebarRef = useOutsideClck<HTMLDivElement>(onClose);
   return (
     <div
       className={cn(

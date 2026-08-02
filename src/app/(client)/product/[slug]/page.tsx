@@ -6,7 +6,13 @@ import PriceView from "@/components/PriceView";
 import ProductCharacteristics from "@/components/ProductCharacteristics";
 import ProductTabs from "@/components/ProductTabs";
 import { getProductBySlug } from "@/sanity/queries";
-import { CheckCircle, CornerDownLeft, StarIcon, Truck, XCircle } from "lucide-react";
+import {
+  CheckCircle,
+  CornerDownLeft,
+  StarIcon,
+  Truck,
+  XCircle,
+} from "lucide-react";
 import { FaRegQuestionCircle } from "react-icons/fa";
 import { FiShare2 } from "react-icons/fi";
 import { RxBorderSplit } from "react-icons/rx";
@@ -20,6 +26,8 @@ const SingleProductPage = async ({
   const { slug } = await params;
   const product = await getProductBySlug(slug);
 
+  if (!product) return null;
+
   return (
     <Container className="py-10">
       {/* Top section: image + details */}
@@ -29,7 +37,9 @@ const SingleProductPage = async ({
         )}
         <div className="flex-1 flex flex-col gap-5">
           <div className="space-y-2">
-            <h2 className="text-2xl font-bold text-text-primary">{product?.name}</h2>
+            <h2 className="text-2xl font-bold text-text-primary">
+              {product?.name}
+            </h2>
             <p className="text-sm text-text-muted tracking-wide leading-relaxed">
               {product?.description}
             </p>
@@ -42,7 +52,9 @@ const SingleProductPage = async ({
                   fill="var(--color-accent)"
                 />
               ))}
-              <p className="text-xs font-semibold text-text-muted ml-1">(120 reviews)</p>
+              <p className="text-xs font-semibold text-text-muted ml-1">
+                (120 reviews)
+              </p>
             </div>
           </div>
 
@@ -56,19 +68,26 @@ const SingleProductPage = async ({
               {(product?.stock as number) > 0 ? (
                 <>
                   <CheckCircle size={16} className="text-primary" />
-                  <span className="text-sm font-semibold text-primary">In Stock</span>
+                  <span className="text-sm font-semibold text-primary">
+                    In Stock
+                  </span>
                 </>
               ) : (
                 <>
                   <XCircle size={16} className="text-danger" />
-                  <span className="text-sm font-semibold text-danger">Out of Stock</span>
+                  <span className="text-sm font-semibold text-danger">
+                    Out of Stock
+                  </span>
                 </>
               )}
             </div>
           </div>
 
           <div className="flex items-center gap-3 w-full py-1 isolate">
-            <AddToCartButton product={product} className="flex-1 rounded-full py-5 text-base" />
+            <AddToCartButton
+              product={product}
+              className="flex-1 rounded-full py-5 text-base"
+            />
             <FavoriteButton showProduct={true} product={product} />
           </div>
 
@@ -97,7 +116,9 @@ const SingleProductPage = async ({
             <div className="border-b border-border p-3 flex items-center gap-3">
               <Truck size={24} className="text-primary shrink-0" />
               <div>
-                <p className="text-sm font-semibold text-text-primary">Free Delivery</p>
+                <p className="text-sm font-semibold text-text-primary">
+                  Free Delivery
+                </p>
                 <p className="text-xs text-text-muted underline underline-offset-2">
                   Enter your Postal Code to check delivery options
                 </p>
@@ -106,10 +127,14 @@ const SingleProductPage = async ({
             <div className="p-3 flex items-center gap-3">
               <CornerDownLeft size={24} className="text-primary shrink-0" />
               <div>
-                <p className="text-sm font-semibold text-text-primary">Return Delivery</p>
+                <p className="text-sm font-semibold text-text-primary">
+                  Return Delivery
+                </p>
                 <p className="text-xs text-text-muted">
                   Free 30 days Delivery Returns.{" "}
-                  <span className="underline underline-offset-2 cursor-pointer hover:text-primary transition-colors">Details</span>
+                  <span className="underline underline-offset-2 cursor-pointer hover:text-primary transition-colors">
+                    Details
+                  </span>
                 </p>
               </div>
             </div>

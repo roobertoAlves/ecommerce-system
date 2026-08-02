@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono, Poppins } from "next/font/google";
+import { Toaster } from "react-hot-toast";
 import "./globals.css";
 
 const jetbrainsMono = JetBrains_Mono({
@@ -22,8 +23,19 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="en">
-      <body className={`${poppins.variable} ${jetbrainsMono.variable} antialiased font-poppins`}>
+      <body
+        className={`${poppins.variable} ${jetbrainsMono.variable} antialiased font-poppins`}
+      >
         {children}
+        <Toaster
+          position="bottom-right"
+          toastOptions={{
+            style: {
+              background: "#333",
+              color: "#fff",
+            },
+          }}
+        />
       </body>
     </html>
   );
