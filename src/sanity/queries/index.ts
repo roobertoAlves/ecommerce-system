@@ -1,4 +1,5 @@
 import { sanityFetch } from "../lib/live";
+import { Category } from "../../sanity.types";
 import {
   BLOG_CATEGORIES,
   BRAND_QUERY,
@@ -12,7 +13,7 @@ import {
   SINGLE_BLOG_QUERY,
 } from "./query";
 
-const getCategories = async (quantity?: number) => {
+const getCategories = async (quantity?: number): Promise<Category[]> => {
   try {
     const query = quantity
       ? `*[_type == 'category'] | order(name asc) [0...$quantity] {
@@ -27,7 +28,7 @@ const getCategories = async (quantity?: number) => {
       query,
       params: quantity ? { quantity } : {},
     });
-    return data;
+    return (data as Category[]) ?? [];
   } catch (error) {
     console.log("Error fetching categories", error);
     return [];
@@ -76,15 +77,14 @@ const getProductBySlug = async (slug: string) => {
     return null;
   }
 };
-const getBrand = async (slug: string) => {
+const getBrand = async (slug: string): Promise<string | null> => {
   try {
     const product = await sanityFetch({
       query: BRAND_QUERY,
-      params: {
-        slug,
-      },
+      params: { slug },
     });
-    return product?.data || null;
+    const results = product?.data as Array<{ brandName: string | null }> | null;
+    return results?.[0]?.brandName ?? null;
   } catch (error) {
     console.error("Error fetching product by ID:", error);
     return null;

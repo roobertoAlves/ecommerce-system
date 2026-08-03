@@ -28,7 +28,7 @@ const ProductTabs = ({ product }: Props) => {
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   const categoryNames = Array.isArray(product?.categories)
-    ? (product.categories as string[]).filter(Boolean).join(", ")
+    ? (product.categories as unknown as string[]).filter(Boolean).join(", ")
     : "—";
 
   return (

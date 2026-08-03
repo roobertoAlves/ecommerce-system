@@ -39,19 +39,54 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  // checkout.session.completed fires for all methods (card, Link, Boleto, Pix).
+  // For Boleto/Pix the funds are NOT captured yet at this point — the order is
+  // created with status "pending" and updated when the async payment settles.
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
     const invoice = session.invoice
       ? await stripe.invoices.retrieve(session.invoice as string)
       : null;
 
+    // payment_status === "paid"   → card / Link (synchronous, funds captured)
+    // payment_status === "unpaid" → Boleto / Pix (voucher issued, awaiting payment)
+    const initialStatus =
+      session.payment_status === "paid" ? "paid" : "pending";
+
     try {
-      await createOrderInSanity(session, invoice);
+      await createOrderInSanity(session, invoice, initialStatus);
     } catch (error) {
       console.error("Error creating order in sanity:", error);
-
       return NextResponse.json(
         { error: `Error creating order: ${error}` },
+        { status: 400 },
+      );
+    }
+  }
+
+  // Boleto: customer paid the voucher → mark order as paid.
+  if (event.type === "checkout.session.async_payment_succeeded") {
+    const session = event.data.object as Stripe.Checkout.Session;
+    try {
+      await updateOrderStatus(session.id, "paid");
+    } catch (error) {
+      console.error("Error updating order status to paid:", error);
+      return NextResponse.json(
+        { error: `Error updating order: ${error}` },
+        { status: 400 },
+      );
+    }
+  }
+
+  // Boleto: voucher expired or payment failed → mark order as cancelled.
+  if (event.type === "checkout.session.async_payment_failed") {
+    const session = event.data.object as Stripe.Checkout.Session;
+    try {
+      await updateOrderStatus(session.id, "cancelled");
+    } catch (error) {
+      console.error("Error updating order status to cancelled:", error);
+      return NextResponse.json(
+        { error: `Error updating order: ${error}` },
         { status: 400 },
       );
     }
@@ -63,6 +98,7 @@ export async function POST(req: NextRequest) {
 async function createOrderInSanity(
   session: Stripe.Checkout.Session,
   invoice: Stripe.Invoice | null | undefined,
+  status: "paid" | "pending" = "paid",
 ) {
   const {
     id,
@@ -114,7 +150,7 @@ async function createOrderInSanity(
     amountDiscount: total_details?.amount_discount ? total_details.amount_discount /100 : 0,
     products: sanityProducts,
     totalPrice: amount_total ? amount_total / 100 : 0,
-    status: "paid",
+    status,
     orderDate: new Date().toISOString(),
     invoice: invoice ? {
       id: invoice.id,
@@ -132,6 +168,23 @@ async function createOrderInSanity(
 
   await updateStockLevels(stockUpdates);
   return order;
+}
+
+async function updateOrderStatus(
+  stripeCheckoutSessionId: string,
+  status: "paid" | "cancelled",
+) {
+  const orders = await backendClient.fetch<{ _id: string }[]>(
+    `*[_type == "order" && stripeCheckoutSessionId == $sessionId][0..0]`,
+    { sessionId: stripeCheckoutSessionId },
+  );
+
+  if (!orders.length) {
+    console.warn(`No order found for session ${stripeCheckoutSessionId}`);
+    return;
+  }
+
+  await backendClient.patch(orders[0]._id).set({ status }).commit();
 }
 
 async function updateStockLevels(stockUpdates: { productId: string; quantity: number }[]) {

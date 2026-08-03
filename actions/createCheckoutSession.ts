@@ -5,6 +5,7 @@ import { Address } from "@/sanity.types";
 import { urlFor } from "@/sanity/lib/image";
 import Stripe from "stripe";
 import { CartItem } from "../store";
+import { SupportedCurrency } from "./currency";
 
 export interface Metadata {
   orderNumber: string;
@@ -22,6 +23,7 @@ export interface GroupedCartItems {
 export async function createCheckoutSession(
   items: GroupedCartItems[],
   metadata: Metadata,
+  currency: SupportedCurrency = "usd",
 ) {
   try {
     // Retrieve existing customer or create a new one
@@ -31,6 +33,9 @@ export async function createCheckoutSession(
     });
     const customerId = customers?.data?.length > 0 ? customers.data[0].id : "";
 
+    // Omitting payment_method_types lets Stripe use dynamic payment methods,
+    // automatically showing what's enabled in the Dashboard for the given
+    // currency/country: cards, Apple Pay, Google Pay, Link and Boleto (BRL only).
     const sessionPayload: Stripe.Checkout.SessionCreateParams = {
       metadata: {
         orderNumber: metadata.orderNumber,
@@ -41,18 +46,25 @@ export async function createCheckoutSession(
       },
       mode: "payment",
       allow_promotion_codes: true,
-      payment_method_types: ["card"],
+      // Boleto requires BRL and is async — invoice_creation is incompatible.
+      // For USD/EUR we keep invoices enabled.
       invoice_creation: {
-        enabled: true,
+        enabled: currency !== "brl",
       },
-      success_url: `${
-        process.env.NEXT_PUBLIC_BASE_URL
-      }/success?session_id={CHECKOUT_SESSION_ID}&orderNumber=${metadata.orderNumber}`,
+      // Boleto: extend voucher expiry to 7 days for BRL checkouts.
+      ...(currency === "brl"
+        ? {
+            payment_method_options: {
+              boleto: { expires_after_days: 7 },
+            },
+          }
+        : {}),
+      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}&orderNumber=${metadata.orderNumber}`,
       cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/cart`,
       line_items: items?.map((item) => ({
         price_data: {
-          currency: "USD",
-          unit_amount: Math.round(item?.product?.price * 100),
+          currency: currency,
+          unit_amount: Math.round((item?.product?.price ?? 0) * 100),
           product_data: {
             name: item?.product?.name || "Unknown Product",
             description: item?.product?.description,
@@ -66,6 +78,7 @@ export async function createCheckoutSession(
         quantity: item?.quantity,
       })),
     };
+
     if (customerId) {
       sessionPayload.customer = customerId;
     } else {

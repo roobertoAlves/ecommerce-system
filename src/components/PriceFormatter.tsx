@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { SupportedCurrency } from "../../actions/createCheckoutSession";
+import { SupportedCurrency } from "../../actions/currency";
 
 const CURRENCY_CONFIG: Record<SupportedCurrency, { locale: string; currency: string }> = {
   usd: { locale: "en-US", currency: "USD" },
