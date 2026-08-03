@@ -26,6 +26,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import {
+  createCheckoutSession,
+  Metadata,
+} from "../../../../actions/createCheckoutSession";
+import { EXCHANGE_RATES, SupportedCurrency } from "../../../../actions/currency";
+import { getExchangeRates } from "../../../../actions/getExchangeRates";
 import useStore from "../../../../store";
 
 const CartPage = () => {
@@ -39,11 +45,17 @@ const CartPage = () => {
 
   const [isClient, setIsClient] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [currency, setCurrency] = useState<SupportedCurrency>("usd");
+  const [rates, setRates] = useState(EXCHANGE_RATES);
   const groupedItems = useStore((state) => state.getGroupedItems());
   const { isSignedIn } = useAuth();
   const { user } = useUser();
   const [addresses, setAddresses] = useState<Address[] | null>(null);
   const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
+
+  useEffect(() => {
+    getExchangeRates().then(setRates);
+  }, []);
 
   useEffect(() => {
     const fetchAddresses = async () => {
@@ -76,6 +88,29 @@ const CartPage = () => {
     }
   };
 
+  const handleCheckout = async () => {
+    setLoading(true);
+
+    try {
+      const metadata: Metadata = {
+        orderNumber: crypto.randomUUID(),
+        customerName: user?.fullName ?? "Guest",
+        customerEmail: user?.emailAddresses[0]?.emailAddress ?? "Unknown",
+        clerkUserId: user?.id ?? "",
+        address: selectedAddress,
+      };
+
+      const checkoutUrl = await createCheckoutSession(groupedItems, metadata, currency);
+      if (checkoutUrl) {
+        window.location.href = checkoutUrl;
+      }
+    } catch (error) {
+      console.error("Error during checkout:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="bg-gray-50 pb-52 md:pb-10">
       {isSignedIn ? (
@@ -86,6 +121,21 @@ const CartPage = () => {
                 <div className="flex items-center gap-2 py-5">
                   <ShoppingBag className="text-darkColor" />
                   <Title>Shopping Cart</Title>
+                  <div className="ml-auto flex gap-1">
+                    {(["usd", "eur", "brl"] as SupportedCurrency[]).map((c) => (
+                      <button
+                        key={c}
+                        onClick={() => setCurrency(c)}
+                        className={`px-3 py-1 text-xs rounded-full border font-semibold uppercase hoverEffect ${
+                          currency === c
+                            ? "bg-darkColor text-white border-darkColor"
+                            : "bg-white text-darkColor border-gray-300"
+                        }`}
+                      >
+                        {c}
+                      </button>
+                    ))}
+                  </div>
                 </div>
                 <div className="grid lg:grid-cols-3 md:gap-8">
                   <div className="lg:col-span-2 rounded-lg">
@@ -168,7 +218,8 @@ const CartPage = () => {
                             </div>
                             <div className="flex flex-col items-start justify-between h-36 md:h-44 p-0.5 md:p-1">
                               <PriceFormatter
-                                amount={(product?.price as number) * itemCount}
+                                amount={(product?.price as number) * itemCount * rates[currency]}
+                                currency={currency}
                                 className="font-bold text-lg"
                               />
                               <QuantityButtons product={product} />
@@ -194,25 +245,29 @@ const CartPage = () => {
                         <div className="space-y-4">
                           <div className="flex items-center justify-between">
                             <span>Subtotal</span>
-                            <PriceFormatter amount={getSubTotalPrice()} />
+                            <PriceFormatter amount={getSubTotalPrice() * rates[currency]} currency={currency} />
                           </div>
                           <div className="flex items-center justify-between">
                             <span>Discount</span>
                             <PriceFormatter
-                              amount={getSubTotalPrice() - getTotalPrice()}
+                              amount={(getSubTotalPrice() - getTotalPrice()) * rates[currency]}
+                              currency={currency}
                             />
                           </div>
                           <Separator />
                           <div className="flex items-center justify-between font-semibold text-lg">
                             <span>Total</span>
                             <PriceFormatter
-                              amount={getTotalPrice()}
+                              amount={getTotalPrice() * rates[currency]}
+                              currency={currency}
                               className="text-lg font-bold text-black"
                             />
                           </div>
                           <Button
                             className="w-full rounded-full font-semibold tracking-wide hoverEffect"
                             size="lg"
+                            disabled={loading}
+                            onClick={handleCheckout}
                           >
                             {loading ? "Processing..." : "Proceed to Checkout"}
                           </Button>
@@ -269,6 +324,36 @@ const CartPage = () => {
                   <div className="md:hidden fixed bottom-0 left-0 w-full bg-white pt-2">
                     <div className="bg-white p-4 rounded-lg border mx-4">
                       <h2>Order Summary</h2>
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <span>Subtotal</span>
+                          <PriceFormatter amount={getSubTotalPrice() * rates[currency]} currency={currency} />
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span>Discount</span>
+                          <PriceFormatter
+                            amount={(getSubTotalPrice() - getTotalPrice()) * rates[currency]}
+                            currency={currency}
+                          />
+                        </div>
+                        <Separator />
+                        <div className="flex items-center justify-between font-semibold text-lg">
+                          <span>Total</span>
+                          <PriceFormatter
+                            amount={getTotalPrice() * rates[currency]}
+                            currency={currency}
+                            className="text-lg font-bold text-black"
+                          />
+                        </div>
+                        <Button
+                          className="w-full rounded-full font-semibold tracking-wide hoverEffect"
+                          size="lg"
+                          disabled={loading}
+                          onClick={handleCheckout}
+                        >
+                          {loading ? "Processing..." : "Proceed to Checkout"}
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>
