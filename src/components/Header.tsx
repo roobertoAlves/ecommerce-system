@@ -5,6 +5,7 @@ import { Logs } from "lucide-react";
 import Link from "next/link";
 import CartIcon from "./CartIcon";
 import Container from "./Container";
+import CurrencyLanguageSelector from "./CurrencyLanguageSelector";
 import FavoriteButton from "./FavoriteButton";
 import HeaderMenu from "./HeaderMenu";
 import Logo from "./Logo";
@@ -29,6 +30,7 @@ const Header = async () => {
         </div>
         <HeaderMenu />
         <div className="w-auto md:w-1/3 flex items-center justify-end gap-5">
+          <CurrencyLanguageSelector />
           <SearchBar />
           <CartIcon />
           <FavoriteButton />

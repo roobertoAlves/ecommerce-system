@@ -2,7 +2,6 @@ export const headerData = [
   { title: "Home", href: "/" },
   { title: "Shop", href: "/shop" },
   { title: "About", href: "/about" },
-  /* { title: "Contact", href: "/contact" }, */
   { title: "Blog", href: "/blog" },
   { title: "Hot Deal", href: "/deal" },
 ];
@@ -23,7 +22,7 @@ export const categoriesData = [
   { title: "Appliances", href: "/category/appliances" },
   { title: "Air Conditioners", href: "/category/air-conditioners" },
   { title: "Kitchen Appliances", href: "/category/kitchen-appliances" },
-  { title: "Gadget Acessories", href: "/category/gadget-acessories" },
+  { title: "Gadget Accessories", href: "/category/gadget-accessories" },
   { title: "Smartphones", href: "/category/smartphones" },
   { title: "Washing Machines", href: "/category/washing-machines" },
 ];
@@ -31,6 +30,7 @@ export const categoriesData = [
 export const productType = [
   { title: "Gadget", value: "gadget" },
   { title: "Smartphone", value: "smartphone" },
+  { title: "Mobile", value: "mobile" },
   { title: "Washing Machine", value: "washing-machine" },
   { title: "Air Conditioner", value: "air-conditioner" },
   { title: "Kitchen Appliance", value: "kitchen-appliance" },

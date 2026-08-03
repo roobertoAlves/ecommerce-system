@@ -12,23 +12,27 @@ import HomeTabbar from "./HomeTabBar";
 import NoProductAvailable from "./NoProductAvailable";
 import ProductCard from "./ProductCard";
 
-const query = groq`*[_type == "product" && variant == $variant] | order(name asc){
+const query = groq`*[
+  _type == "product" && (
+    variant == $variant ||
+    $variant in categories[]->slug.current
+  )
+] | order(name asc) {
   ...,"categories": categories[]->title
 }`;
 
 const ProductGrid = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
-  const [selectedTab, setSelectedTab] = useState(productType[0]?.title || "");
+  const [selectedTab, setSelectedTab] = useState(productType[0]?.value || "");
 
   useEffect(() => {
-    const params = { variant: selectedTab.toLowerCase() };
     const fetchData = async () => {
       setLoading(true);
       try {
         const response = await client.fetch<Product[]>(
           query,
-          params as Record<string, unknown>,
+          { variant: selectedTab } as Record<string, unknown>,
         );
         setProducts(response);
       } catch (error) {
@@ -52,20 +56,18 @@ const ProductGrid = () => {
         </div>
       ) : products?.length ? (
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2.5 mt-10">
-          <>
-            {products?.map((product) => (
-              <AnimatePresence key={product?._id}>
-                <motion.div
-                  layout
-                  initial={{ opacity: 0.2 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                >
-                  <ProductCard key={product?._id} product={product} />
-                </motion.div>
-              </AnimatePresence>
-            ))}
-          </>
+          {products?.map((product) => (
+            <AnimatePresence key={product?._id}>
+              <motion.div
+                layout
+                initial={{ opacity: 0.2 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <ProductCard key={product?._id} product={product} />
+              </motion.div>
+            </AnimatePresence>
+          ))}
         </div>
       ) : (
         <NoProductAvailable selectedTab={selectedTab} />

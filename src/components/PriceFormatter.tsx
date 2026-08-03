@@ -1,11 +1,5 @@
 import { cn } from "@/lib/utils";
-import { SupportedCurrency } from "../../actions/currency";
-
-const CURRENCY_CONFIG: Record<SupportedCurrency, { locale: string; currency: string }> = {
-  usd: { locale: "en-US", currency: "USD" },
-  eur: { locale: "de-DE", currency: "EUR" },
-  brl: { locale: "pt-BR", currency: "BRL" },
-};
+import { getLocaleConfig, SupportedCurrency } from "../../actions/currency";
 
 interface Props {
   amount: number | undefined;
@@ -14,8 +8,8 @@ interface Props {
 }
 
 const PriceFormatter = ({ amount, className, currency = "usd" }: Props) => {
-  const { locale, currency: currencyCode } = CURRENCY_CONFIG[currency];
-  const formattedPrice = new Number(amount).toLocaleString(locale, {
+  const { locale, currency: currencyCode } = getLocaleConfig(currency);
+  const formattedPrice = new Number(amount ?? 0).toLocaleString(locale, {
     style: "currency",
     currency: currencyCode,
     minimumFractionDigits: 2,

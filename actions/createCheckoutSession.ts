@@ -26,16 +26,12 @@ export async function createCheckoutSession(
   currency: SupportedCurrency = "usd",
 ) {
   try {
-    // Retrieve existing customer or create a new one
     const customers = await stripe.customers.list({
       email: metadata.customerEmail,
       limit: 1,
     });
     const customerId = customers?.data?.length > 0 ? customers.data[0].id : "";
 
-    // Omitting payment_method_types lets Stripe use dynamic payment methods,
-    // automatically showing what's enabled in the Dashboard for the given
-    // currency/country: cards, Apple Pay, Google Pay, Link and Boleto (BRL only).
     const sessionPayload: Stripe.Checkout.SessionCreateParams = {
       metadata: {
         orderNumber: metadata.orderNumber,
@@ -46,12 +42,9 @@ export async function createCheckoutSession(
       },
       mode: "payment",
       allow_promotion_codes: true,
-      // Boleto requires BRL and is async — invoice_creation is incompatible.
-      // For USD/EUR we keep invoices enabled.
       invoice_creation: {
         enabled: currency !== "brl",
       },
-      // Boleto: extend voucher expiry to 7 days for BRL checkouts.
       ...(currency === "brl"
         ? {
             payment_method_options: {

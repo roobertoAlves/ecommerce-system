@@ -17,7 +17,6 @@ interface StoreState {
   getSubTotalPrice: () => number;
   getItemCount: (productId: string) => number;
   getGroupedItems: () => CartItem[];
-  //   // favorite
   favoriteProduct: Product[];
   addToFavorite: (product: Product) => Promise<void>;
   removeFromFavorite: (productId: string) => void;
@@ -31,9 +30,7 @@ const useStore = create<StoreState>()(
       favoriteProduct: [],
       addItem: (product) =>
         set((state) => {
-          const existingItem = state.items.find(
-            (item) => item.product._id === product._id,
-          );
+          const existingItem = state.items.find((item) => item.product._id === product._id);
           if (existingItem) {
             return {
               items: state.items.map((item) =>
@@ -42,17 +39,14 @@ const useStore = create<StoreState>()(
                   : item,
               ),
             };
-          } else {
-            return { items: [...state.items, { product, quantity: 1 }] };
           }
+          return { items: [...state.items, { product, quantity: 1 }] };
         }),
       removeItem: (productId) =>
         set((state) => ({
           items: state.items.reduce((acc, item) => {
             if (item.product._id === productId) {
-              if (item.quantity > 1) {
-                acc.push({ ...item, quantity: item.quantity - 1 });
-              }
+              if (item.quantity > 1) acc.push({ ...item, quantity: item.quantity - 1 });
             } else {
               acc.push(item);
             }
@@ -61,61 +55,42 @@ const useStore = create<StoreState>()(
         })),
       deleteCartProduct: (productId) =>
         set((state) => ({
-          items: state.items.filter(
-            ({ product }) => product?._id !== productId,
-          ),
+          items: state.items.filter(({ product }) => product?._id !== productId),
         })),
       resetCart: () => set({ items: [] }),
-      getTotalPrice: () => {
-        return get().items.reduce(
-          (total, item) => total + (item.product.price ?? 0) * item.quantity,
-          0,
-        );
-      },
-      getSubTotalPrice: () => {
-        return get().items.reduce((total, item) => {
+      getTotalPrice: () =>
+        get().items.reduce((total, item) => total + (item.product.price ?? 0) * item.quantity, 0),
+      getSubTotalPrice: () =>
+        get().items.reduce((total, item) => {
           const price = item.product.price ?? 0;
           const discount = ((item.product.discount ?? 0) * price) / 100;
-          const discountedPrice = price + discount;
-          return total + discountedPrice * item.quantity;
-        }, 0);
-      },
+          return total + (price + discount) * item.quantity;
+        }, 0),
       getItemCount: (productId) => {
         const item = get().items.find((item) => item.product._id === productId);
         return item ? item.quantity : 0;
       },
       getGroupedItems: () => get().items,
-      addToFavorite: (product: Product) => {
-        return new Promise<void>((resolve) => {
+      addToFavorite: (product: Product) =>
+        new Promise<void>((resolve) => {
           set((state: StoreState) => {
-            const isFavorite = state.favoriteProduct.some(
-              (item) => item._id === product._id,
-            );
+            const isFavorite = state.favoriteProduct.some((item) => item._id === product._id);
             return {
               favoriteProduct: isFavorite
-                ? state.favoriteProduct.filter(
-                    (item) => item._id !== product._id,
-                  )
+                ? state.favoriteProduct.filter((item) => item._id !== product._id)
                 : [...state.favoriteProduct, { ...product }],
             };
           });
           resolve();
-        });
-      },
+        }),
       removeFromFavorite: (productId: string) => {
         set((state: StoreState) => ({
-          favoriteProduct: state.favoriteProduct.filter(
-            (item) => item?._id !== productId,
-          ),
+          favoriteProduct: state.favoriteProduct.filter((item) => item?._id !== productId),
         }));
       },
-      resetFavorite: () => {
-        set({ favoriteProduct: [] });
-      },
+      resetFavorite: () => set({ favoriteProduct: [] }),
     }),
-    {
-      name: "cart-store",
-    },
+    { name: "cart-store" },
   ),
 );
 

@@ -12,10 +12,17 @@ export async function getExchangeRates(): Promise<Record<SupportedCurrency, numb
     if (!res.ok) throw new Error("Failed to fetch exchange rates");
 
     const data = await res.json();
+    const r = data.conversion_rates;
+
     return {
       usd: 1,
-      eur: data.conversion_rates.EUR,
-      brl: data.conversion_rates.BRL,
+      eur: r.EUR,
+      brl: r.BRL,
+      gbp: r.GBP,
+      jpy: r.JPY,
+      cad: r.CAD,
+      aud: r.AUD,
+      mxn: r.MXN,
     };
   } catch (error) {
     console.error("Error fetching exchange rates, using fallback:", error);

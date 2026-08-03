@@ -1,5 +1,6 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import { CurrencyProvider } from "@/context/CurrencyContext";
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { JetBrains_Mono, Poppins } from "next/font/google";
@@ -33,11 +34,13 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <div className={`${poppins.variable} ${jetbrainsMono.variable} flex flex-col min-h-screen font-poppins`}>
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
-      </div>
+      <CurrencyProvider>
+        <div className={`${poppins.variable} ${jetbrainsMono.variable} flex flex-col min-h-screen font-poppins`}>
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </div>
+      </CurrencyProvider>
     </ClerkProvider>
   );
 }

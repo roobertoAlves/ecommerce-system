@@ -18,6 +18,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useCurrency } from "@/context/CurrencyContext";
 import { Address } from "@/sanity.types";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
@@ -31,51 +32,40 @@ import {
   createCheckoutSession,
   Metadata,
 } from "../../../../actions/createCheckoutSession";
-import { EXCHANGE_RATES, SupportedCurrency } from "../../../../actions/currency";
-import { getExchangeRates } from "../../../../actions/getExchangeRates";
 import useStore from "../../../../store";
 
 const CartPage = () => {
   const { deleteCartProduct, getItemCount, resetCart } = useStore();
+  const { currency, rates } = useCurrency();
 
   const [loading, setLoading] = useState(false);
-  const [currency, setCurrency] = useState<SupportedCurrency>("usd");
-  const [rates, setRates] = useState(EXCHANGE_RATES);
   const groupedItems = useStore((state) => state.getGroupedItems());
   const { isSignedIn } = useAuth();
   const { user } = useUser();
   const [addresses, setAddresses] = useState<Address[] | null>(null);
   const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
 
- const [selectedIds, setSelectedIds] = useState<Set<string>>(
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(
     () => new Set(groupedItems.map((i) => i.product._id)),
   );
 
   useEffect(() => {
     setSelectedIds((prev) => {
       const currentIds = new Set(groupedItems.map((i) => i.product._id));
-      const next = new Set<string>();
+      const preserved = new Set<string>();
       currentIds.forEach((id) => {
-        next.add(id); // new items start checked; existing ones keep their state
-        if (!prev.has(id)) next.add(id);
+        if (prev.size === 0 || prev.has(id)) preserved.add(id);
       });
-      prev.forEach((id) => {
-        if (currentIds.has(id)) next.add(id);
-      });
-      return next;
+      return preserved;
     });
   }, [groupedItems.length]);
 
-  const allSelected =
-    groupedItems.length > 0 && selectedIds.size === groupedItems.length;
+  const allSelected = groupedItems.length > 0 && selectedIds.size === groupedItems.length;
   const someSelected = selectedIds.size > 0 && !allSelected;
 
   const toggleAll = () => {
-    if (allSelected) {
-      setSelectedIds(new Set());
-    } else {
-      setSelectedIds(new Set(groupedItems.map((i) => i.product._id)));
-    }
+    if (allSelected) setSelectedIds(new Set());
+    else setSelectedIds(new Set(groupedItems.map((i) => i.product._id)));
   };
 
   const toggleItem = (id: string) => {
@@ -86,7 +76,6 @@ const CartPage = () => {
     });
   };
 
-  // ── Items that will go to checkout ──────────────────────────────────────────
   const selectedItems = useMemo(
     () => groupedItems.filter((i) => selectedIds.has(i.product._id)),
     [groupedItems, selectedIds],
@@ -114,39 +103,23 @@ const CartPage = () => {
   const selectedDiscount = selectedSubTotal - selectedTotal;
 
   useEffect(() => {
-    getExchangeRates().then(setRates);
-  }, []);
-
-  useEffect(() => {
     const fetchAddresses = async () => {
-      setLoading(true);
       try {
-        const query = `*[_type=="address"] | order(publishedAt desc)`;
-        const data = await client.fetch(query);
+        const data = await client.fetch(`*[_type=="address"] | order(publishedAt desc)`);
         setAddresses(data);
-        const defaultAddress = data.find((addr: Address) => addr.default);
-        if (defaultAddress) {
-          setSelectedAddress(defaultAddress);
-        } else if (data.length > 0) {
-          setSelectedAddress(data[0]);
-        }
+        const defaultAddr = data.find((a: Address) => a.default);
+        setSelectedAddress(defaultAddr ?? data[0] ?? null);
       } catch (error) {
         console.error("Error fetching addresses:", error);
-      } finally {
-        setLoading(false);
       }
     };
     fetchAddresses();
   }, []);
 
   const handleResetCart = () => {
-    const confirmed = window.confirm(
-      "Are you sure you want to reset the cart? This action cannot be undone.",
-    );
-    if (confirmed) {
-      resetCart();
-      toast.success("Cart reset successfully!");
-    }
+    if (!window.confirm("Are you sure you want to reset the cart? This action cannot be undone.")) return;
+    resetCart();
+    toast.success("Cart reset successfully!");
   };
 
   const handleCheckout = async () => {
@@ -163,15 +136,8 @@ const CartPage = () => {
         clerkUserId: user?.id ?? "",
         address: selectedAddress,
       };
-
-      const checkoutUrl = await createCheckoutSession(
-        selectedItems,
-        metadata,
-        currency,
-      );
-      if (checkoutUrl) {
-        window.location.href = checkoutUrl;
-      }
+      const checkoutUrl = await createCheckoutSession(selectedItems, metadata, currency);
+      if (checkoutUrl) window.location.href = checkoutUrl;
     } catch (error) {
       console.error("Error during checkout:", error);
     } finally {
@@ -182,32 +148,26 @@ const CartPage = () => {
   const OrderSummary = () => (
     <div className="space-y-4">
       <div className="flex items-center justify-between text-sm">
-        <span className="text-gray-500">
-          Selected items ({selectedItems.length}/{groupedItems.length})
+        <span className="text-text-muted">
+          Selected ({selectedItems.length}/{groupedItems.length} items)
         </span>
-        <PriceFormatter
-          amount={selectedSubTotal * rates[currency]}
-          currency={currency}
-        />
+        <PriceFormatter amount={selectedSubTotal * rates[currency]} currency={currency} />
       </div>
       <div className="flex items-center justify-between text-sm">
-        <span className="text-gray-500">Discount</span>
-        <PriceFormatter
-          amount={selectedDiscount * rates[currency]}
-          currency={currency}
-        />
+        <span className="text-text-muted">Discount</span>
+        <PriceFormatter amount={selectedDiscount * rates[currency]} currency={currency} />
       </div>
       <Separator />
       <div className="flex items-center justify-between font-semibold text-lg">
-        <span>Total</span>
+        <span className="text-text-primary">Total</span>
         <PriceFormatter
           amount={selectedTotal * rates[currency]}
           currency={currency}
-          className="text-lg font-bold text-black"
+          className="text-lg font-bold text-primary"
         />
       </div>
       <Button
-        className="w-full rounded-full font-semibold tracking-wide hoverEffect"
+        className="w-full rounded-full font-semibold tracking-wide"
         size="lg"
         disabled={loading || selectedItems.length === 0}
         onClick={handleCheckout}
@@ -222,265 +182,216 @@ const CartPage = () => {
   );
 
   return (
-    <div className="bg-gray-50 pb-52 md:pb-10">
+    <div className="bg-bg pb-52 md:pb-10">
       {isSignedIn ? (
         <Container>
-          <div>
-            {groupedItems?.length ? (
-              <>
-                <div className="flex items-center gap-2 py-5">
-                  <ShoppingBag className="text-darkColor" />
-                  <Title>Shopping Cart</Title>
-                  <div className="ml-auto flex gap-1">
-                    {(["usd", "eur", "brl"] as SupportedCurrency[]).map((c) => (
-                      <button
-                        key={c}
-                        onClick={() => setCurrency(c)}
-                        className={`px-3 py-1 text-xs rounded-full border font-semibold uppercase hoverEffect ${
-                          currency === c
-                            ? "bg-darkColor text-white border-darkColor"
-                            : "bg-white text-darkColor border-gray-300"
-                        }`}
+          {groupedItems?.length ? (
+            <>
+              <div className="flex items-center gap-2 py-5">
+                <ShoppingBag className="text-primary" />
+                <Title>Shopping Cart</Title>
+              </div>
+
+              <div className="grid lg:grid-cols-3 md:gap-8">
+                <div className="lg:col-span-2 rounded-lg">
+                  <div className="border border-border bg-surface rounded-lg overflow-hidden">
+                    <div className="flex items-center gap-3 px-4 py-3 border-b border-border bg-bg-secondary">
+                      <Checkbox
+                        id="select-all"
+                        checked={allSelected}
+                        data-state={
+                          someSelected ? "indeterminate" : allSelected ? "checked" : "unchecked"
+                        }
+                        onCheckedChange={toggleAll}
+                        aria-label="Select all items"
+                        className="w-5 h-5"
+                      />
+                      <label
+                        htmlFor="select-all"
+                        className="text-sm font-semibold cursor-pointer select-none text-text-primary"
                       >
-                        {c}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                        Select All ({groupedItems.length})
+                      </label>
+                      {someSelected && (
+                        <span className="ml-auto text-xs text-text-muted">
+                          {selectedIds.size} selected
+                        </span>
+                      )}
+                    </div>
 
-                <div className="grid lg:grid-cols-3 md:gap-8">
-                  <div className="lg:col-span-2 rounded-lg">
-                    <div className="border bg-white rounded-md">
-
-                      <div className="flex items-center gap-3 px-4 py-3 border-b bg-gray-50 rounded-t-md">
-                        <Checkbox
-                          id="select-all"
-                          checked={allSelected}
-                          data-state={
-                            someSelected
-                              ? "indeterminate"
-                              : allSelected
-                                ? "checked"
-                                : "unchecked"
-                          }
-                          onCheckedChange={toggleAll}
-                          aria-label="Select all items"
-                          className="w-5 h-5"
-                        />
-                        <label
-                          htmlFor="select-all"
-                          className="text-sm font-semibold cursor-pointer select-none"
+                    {groupedItems?.map(({ product }) => {
+                      const itemCount = getItemCount(product?._id);
+                      const isChecked = selectedIds.has(product._id);
+                      return (
+                        <div
+                          key={product._id}
+                          className={`border-b border-border last:border-b-0 flex items-center gap-3 p-2.5 transition-colors ${
+                            isChecked ? "bg-surface" : "bg-bg-secondary/40"
+                          }`}
                         >
-                          Select All ({groupedItems.length})
-                        </label>
-                        {someSelected && (
-                          <span className="ml-auto text-xs text-gray-400">
-                            {selectedIds.size} selected
-                          </span>
-                        )}
-                      </div>
+                          <Checkbox
+                            id={`item-${product._id}`}
+                            checked={isChecked}
+                            onCheckedChange={() => toggleItem(product._id)}
+                            aria-label={`Select ${product.name}`}
+                            className="w-5 h-5 shrink-0 self-center"
+                          />
 
-                      {/* Product rows */}
-                      {groupedItems?.map(({ product }) => {
-                        const itemCount = getItemCount(product?._id);
-                        const isChecked = selectedIds.has(product._id);
-                        return (
                           <div
-                            key={product._id}
-                            className={`border-b last:border-b-0 flex items-center gap-3 p-2.5 transition-colors ${
-                              isChecked ? "bg-white" : "bg-gray-50/60"
+                            className={`flex flex-1 items-start gap-2 h-36 md:h-44 transition-opacity ${
+                              isChecked ? "opacity-100" : "opacity-40"
                             }`}
                           >
-                            <Checkbox
-                              id={`item-${product._id}`}
-                              checked={isChecked}
-                              onCheckedChange={() => toggleItem(product._id)}
-                              aria-label={`Select ${product.name}`}
-                              className="w-5 h-5 shrink-0 self-center"
-                            />
-
-                            <div
-                              className={`flex flex-1 items-start gap-2 h-36 md:h-44 transition-opacity ${
-                                isChecked ? "opacity-100" : "opacity-50"
-                              }`}
-                            >
-                              {product?.images && (
-                                <Link
-                                  href={`/product/${product?.slug?.current}`}
-                                  className="border p-0.5 md:p-1 mr-2 rounded-md overflow-hidden group"
-                                >
-                                  <Image
-                                    src={urlFor(product?.images[0]).url()}
-                                    alt="productImage"
-                                    width={500}
-                                    height={500}
-                                    loading="lazy"
-                                    className="w-32 md:w-40 h-32 md:h-40 object-cover group-hover:scale-105 hoverEffect"
-                                  />
-                                </Link>
-                              )}
-                              <div className="h-full flex flex-1 flex-col justify-between py-1">
-                                <div className="flex flex-col gap-0.5 md:gap-1.5">
-                                  <h2 className="text-base font-semibold line-clamp-1">
-                                    {product?.name}
-                                  </h2>
-                                  <p className="text-sm capitalize">
-                                    Variant:{" "}
-                                    <span className="font-semibold">
-                                      {product?.variant}
-                                    </span>
-                                  </p>
-                                  <p className="text-sm capitalize">
-                                    Status:{" "}
-                                    <span className="font-semibold">
-                                      {product?.status}
-                                    </span>
-                                  </p>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                  <TooltipProvider>
-                                    <Tooltip>
-                                      <TooltipTrigger>
-                                        <button
-                                          onClick={() => {
-                                            deleteCartProduct(product?._id);
-                                            toast.success(
-                                              "Product deleted successfully",
-                                            );
-                                          }}
-                                          className="flex items-center gap-1 text-sm text-gray-400 hover:text-red-600 hoverEffect"
-                                          aria-label="Remove item"
-                                        >
-                                          <Trash className="w-4 h-4 md:w-5 md:h-5" />
-                                          <span className="hidden md:inline text-xs">Remove</span>
-                                        </button>
-                                      </TooltipTrigger>
-                                      <TooltipContent className="font-bold bg-red-600">
-                                        Remove from cart
-                                      </TooltipContent>
-                                    </Tooltip>
-                                  </TooltipProvider>
-                                </div>
+                            {product?.images && (
+                              <Link
+                                href={`/product/${product?.slug?.current}`}
+                                className="border border-border p-0.5 md:p-1 mr-2 rounded-md overflow-hidden group"
+                              >
+                                <Image
+                                  src={urlFor(product?.images[0]).url()}
+                                  alt="productImage"
+                                  width={500}
+                                  height={500}
+                                  loading="lazy"
+                                  className="w-32 md:w-40 h-32 md:h-40 object-cover group-hover:scale-105 transition-transform duration-300"
+                                />
+                              </Link>
+                            )}
+                            <div className="h-full flex flex-1 flex-col justify-between py-1">
+                              <div className="flex flex-col gap-0.5 md:gap-1.5">
+                                <h2 className="text-base font-semibold line-clamp-1 text-text-primary">
+                                  {product?.name}
+                                </h2>
+                                <p className="text-sm capitalize text-text-muted">
+                                  Variant:{" "}
+                                  <span className="font-semibold text-text-primary">
+                                    {product?.variant}
+                                  </span>
+                                </p>
+                                <p className="text-sm capitalize text-text-muted">
+                                  Status:{" "}
+                                  <span className="font-semibold text-text-primary">
+                                    {product?.status}
+                                  </span>
+                                </p>
                               </div>
-                            </div>
-
-                            <div
-                              className={`flex flex-col items-end justify-between h-36 md:h-44 p-0.5 md:p-1 shrink-0 transition-opacity ${
-                                isChecked ? "opacity-100" : "opacity-50"
-                              }`}
-                            >
-                              <PriceFormatter
-                                amount={
-                                  (product?.price as number) *
-                                  itemCount *
-                                  rates[currency]
-                                }
-                                currency={currency}
-                                className="font-bold text-lg"
-                              />
-                              <QuantityButtons product={product} />
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger
+                                    onClick={() => {
+                                      deleteCartProduct(product?._id);
+                                      toast.success("Product removed");
+                                    }}
+                                    className="inline-flex items-center gap-1 text-sm text-text-muted hover:text-danger transition-colors duration-200"
+                                    aria-label="Remove item"
+                                  >
+                                    <Trash className="w-4 h-4 md:w-5 md:h-5" />
+                                    <span className="hidden md:inline text-xs">Remove</span>
+                                  </TooltipTrigger>
+                                  <TooltipContent className="font-bold bg-danger text-white">
+                                    Remove from cart
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
                             </div>
                           </div>
-                        );
-                      })}
 
-                      <div className="px-4 py-3 flex items-center justify-between border-t">
-                        <Button
-                          onClick={handleResetCart}
-                          className="font-semibold"
-                          variant="destructive"
-                          size="sm"
-                        >
-                          Reset Cart
-                        </Button>
-                        {selectedItems.length < groupedItems.length && (
-                          <button
-                            onClick={() =>
-                              setSelectedIds(
-                                new Set(groupedItems.map((i) => i.product._id)),
-                              )
-                            }
-                            className="text-xs text-blue-600 hover:underline hoverEffect"
+                          <div
+                            className={`flex flex-col items-end justify-between h-36 md:h-44 p-0.5 md:p-1 shrink-0 transition-opacity ${
+                              isChecked ? "opacity-100" : "opacity-40"
+                            }`}
                           >
-                            Re-select all
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="lg:col-span-1">
-                      {/* Desktop order summary */}
-                      <div className="hidden md:block w-full bg-white p-6 rounded-lg border">
-                        <h2 className="text-xl font-semibold mb-4">
-                          Order Summary
-                        </h2>
-                        <OrderSummary />
-                      </div>
-
-                      {/* Delivery addresses */}
-                      {addresses && (
-                        <div className="bg-white rounded-md mt-5">
-                          <Card>
-                            <CardHeader>
-                              <CardTitle>Delivery Addresses</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                              <RadioGroup
-                                defaultValue={addresses
-                                  ?.find((addr) => addr.default)
-                                  ?._id.toString()}
-                              >
-                                {addresses?.map((address) => (
-                                  <div
-                                    key={address._id}
-                                    onClick={() => setSelectedAddress(address)}
-                                    className={`flex items-center space-x-2 mb-4 cursor-pointer ${
-                                      selectedAddress?._id === address?._id &&
-                                      "text-shop_dark_green"
-                                    }`}
-                                  >
-                                    <RadioGroupItem
-                                      value={address._id.toString()}
-                                    />
-                                    <Label
-                                      htmlFor={`address-${address?._id}`}
-                                      className="grid gap-1.5 flex-1"
-                                    >
-                                      <span className="font-semibold">
-                                        {address?.name}
-                                      </span>
-                                      <span className="text-sm text-black/60">
-                                        {address?.address}, {address?.city},{" "}
-                                        {address?.state} {address?.zip}
-                                      </span>
-                                    </Label>
-                                  </div>
-                                ))}
-                              </RadioGroup>
-                              <Button variant="outline" className="w-full mt-4">
-                                Add New Address
-                              </Button>
-                            </CardContent>
-                          </Card>
+                            <PriceFormatter
+                              amount={(product?.price as number) * itemCount * rates[currency]}
+                              currency={currency}
+                              className="font-bold text-lg text-primary"
+                            />
+                            <QuantityButtons product={product} />
+                          </div>
                         </div>
+                      );
+                    })}
+
+                    <div className="px-4 py-3 flex items-center justify-between border-t border-border bg-bg-secondary/40">
+                      <Button
+                        onClick={handleResetCart}
+                        className="font-semibold"
+                        variant="destructive"
+                        size="sm"
+                      >
+                        Reset Cart
+                      </Button>
+                      {selectedItems.length < groupedItems.length && (
+                        <button
+                          onClick={() =>
+                            setSelectedIds(new Set(groupedItems.map((i) => i.product._id)))
+                          }
+                          className="text-xs text-primary hover:underline transition-colors duration-200"
+                        >
+                          Re-select all
+                        </button>
                       )}
                     </div>
                   </div>
+                </div>
 
-                  <div className="md:hidden fixed bottom-0 left-0 w-full bg-white pt-2 shadow-[0_-4px_12px_rgba(0,0,0,0.08)]">
-                    <div className="bg-white p-4 rounded-t-xl border-t mx-0">
-                      <h2 className="font-semibold mb-3">Order Summary</h2>
-                      <OrderSummary />
+                <div className="lg:col-span-1">
+                  <div className="hidden md:block w-full bg-surface p-6 rounded-lg border border-border">
+                    <h2 className="text-xl font-semibold mb-4 text-text-primary">Order Summary</h2>
+                    <OrderSummary />
+                  </div>
+
+                  {addresses && (
+                    <div className="bg-surface rounded-md mt-5 border border-border">
+                      <Card>
+                        <CardHeader>
+                          <CardTitle className="text-text-primary">Delivery Addresses</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <RadioGroup
+                            defaultValue={addresses?.find((a) => a.default)?._id.toString()}
+                          >
+                            {addresses?.map((address) => (
+                              <div
+                                key={address._id}
+                                onClick={() => setSelectedAddress(address)}
+                                className={`flex items-center space-x-2 mb-4 cursor-pointer ${
+                                  selectedAddress?._id === address?._id
+                                    ? "text-primary"
+                                    : "text-text-primary"
+                                }`}
+                              >
+                                <RadioGroupItem value={address._id.toString()} />
+                                <Label className="grid gap-1.5 flex-1 cursor-pointer">
+                                  <span className="font-semibold">{address?.name}</span>
+                                  <span className="text-sm text-text-muted">
+                                    {address?.address}, {address?.city},{" "}
+                                    {address?.state} {address?.zip}
+                                  </span>
+                                </Label>
+                              </div>
+                            ))}
+                          </RadioGroup>
+                          <Button variant="outline" className="w-full mt-4">
+                            Add New Address
+                          </Button>
+                        </CardContent>
+                      </Card>
                     </div>
+                  )}
+                </div>
+
+                <div className="md:hidden fixed bottom-0 left-0 w-full bg-surface pt-2 shadow-[0_-4px_16px_rgba(0,0,0,0.1)] border-t border-border">
+                  <div className="p-4">
+                    <p className="text-sm font-semibold text-text-primary mb-3">Order Summary</p>
+                    <OrderSummary />
                   </div>
                 </div>
-              </>
-            ) : (
-              <EmptyCart />
-            )}
-          </div>
+              </div>
+            </>
+          ) : (
+            <EmptyCart />
+          )}
         </Container>
       ) : (
         <NoAccess />
