@@ -19,6 +19,7 @@
       }
     ],
     "paths": {
+      "@/sanity.types": ["./sanity.types"],
       "@/*": ["./src/*"]
     }
   },

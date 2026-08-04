@@ -32,7 +32,74 @@ import {
   createCheckoutSession,
   Metadata,
 } from "../../../../actions/createCheckoutSession";
+import { SupportedCurrency } from "../../../../actions/currency";
 import useStore from "../../../../store";
+
+type OrderSummaryProps = {
+  selectedItems: Array<{ quantity: number }>;
+  groupedItemsLength: number;
+  selectedSubTotal: number;
+  selectedDiscount: number;
+  selectedTotal: number;
+  rates: Record<string, number>;
+  currency: SupportedCurrency;
+  loading: boolean;
+  onCheckout: () => void;
+};
+
+function OrderSummary({
+  selectedItems,
+  groupedItemsLength,
+  selectedSubTotal,
+  selectedDiscount,
+  selectedTotal,
+  rates,
+  currency,
+  loading,
+  onCheckout,
+}: OrderSummaryProps) {
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between text-sm">
+        <span className="text-text-muted">
+          Selected ({selectedItems.length}/{groupedItemsLength} items)
+        </span>
+        <PriceFormatter
+          amount={selectedSubTotal * rates[currency]}
+          currency={currency}
+        />
+      </div>
+      <div className="flex items-center justify-between text-sm">
+        <span className="text-text-muted">Discount</span>
+        <PriceFormatter
+          amount={selectedDiscount * rates[currency]}
+          currency={currency}
+        />
+      </div>
+      <Separator />
+      <div className="flex items-center justify-between font-semibold text-lg">
+        <span className="text-text-primary">Total</span>
+        <PriceFormatter
+          amount={selectedTotal * rates[currency]}
+          currency={currency}
+          className="text-lg font-bold text-primary"
+        />
+      </div>
+      <Button
+        className="w-full rounded-full font-semibold tracking-wide"
+        size="lg"
+        disabled={loading || selectedItems.length === 0}
+        onClick={onCheckout}
+      >
+        {loading
+          ? "Processing..."
+          : selectedItems.length === 0
+            ? "Select items to checkout"
+            : `Checkout (${selectedItems.length} item${selectedItems.length > 1 ? "s" : ""})`}
+      </Button>
+    </div>
+  );
+}
 
 const CartPage = () => {
   const { deleteCartProduct, getItemCount, resetCart } = useStore();
@@ -49,36 +116,42 @@ const CartPage = () => {
     () => new Set(groupedItems.map((i) => i.product._id)),
   );
 
-  useEffect(() => {
-    setSelectedIds((prev) => {
-      const currentIds = new Set(groupedItems.map((i) => i.product._id));
-      const preserved = new Set<string>();
-      currentIds.forEach((id) => {
-        if (prev.size === 0 || prev.has(id)) preserved.add(id);
-      });
-      return preserved;
-    });
-  }, [groupedItems.length]);
+  const currentItemIds = useMemo(
+    () => groupedItems.map((item) => item.product._id),
+    [groupedItems],
+  );
 
-  const allSelected = groupedItems.length > 0 && selectedIds.size === groupedItems.length;
-  const someSelected = selectedIds.size > 0 && !allSelected;
+  const visibleSelectedIds = useMemo(
+    () => new Set(currentItemIds.filter((id) => selectedIds.has(id))),
+    [currentItemIds, selectedIds],
+  );
+
+  const allSelected =
+    currentItemIds.length > 0 &&
+    visibleSelectedIds.size === currentItemIds.length;
+  const someSelected = visibleSelectedIds.size > 0 && !allSelected;
 
   const toggleAll = () => {
     if (allSelected) setSelectedIds(new Set());
-    else setSelectedIds(new Set(groupedItems.map((i) => i.product._id)));
+    else setSelectedIds(new Set(currentItemIds));
   };
 
   const toggleItem = (id: string) => {
     setSelectedIds((prev) => {
       const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
       return next;
     });
   };
 
   const selectedItems = useMemo(
-    () => groupedItems.filter((i) => selectedIds.has(i.product._id)),
-    [groupedItems, selectedIds],
+    () =>
+      groupedItems.filter((item) => visibleSelectedIds.has(item.product._id)),
+    [groupedItems, visibleSelectedIds],
   );
 
   const selectedSubTotal = useMemo(
@@ -105,7 +178,9 @@ const CartPage = () => {
   useEffect(() => {
     const fetchAddresses = async () => {
       try {
-        const data = await client.fetch(`*[_type=="address"] | order(publishedAt desc)`);
+        const data = await client.fetch(
+          `*[_type=="address"] | order(publishedAt desc)`,
+        );
         setAddresses(data);
         const defaultAddr = data.find((a: Address) => a.default);
         setSelectedAddress(defaultAddr ?? data[0] ?? null);
@@ -117,7 +192,12 @@ const CartPage = () => {
   }, []);
 
   const handleResetCart = () => {
-    if (!window.confirm("Are you sure you want to reset the cart? This action cannot be undone.")) return;
+    if (
+      !window.confirm(
+        "Are you sure you want to reset the cart? This action cannot be undone.",
+      )
+    )
+      return;
     resetCart();
     toast.success("Cart reset successfully!");
   };
@@ -136,7 +216,11 @@ const CartPage = () => {
         clerkUserId: user?.id ?? "",
         address: selectedAddress,
       };
-      const checkoutUrl = await createCheckoutSession(selectedItems, metadata, currency);
+      const checkoutUrl = await createCheckoutSession(
+        selectedItems,
+        metadata,
+        currency,
+      );
       if (checkoutUrl) window.location.href = checkoutUrl;
     } catch (error) {
       console.error("Error during checkout:", error);
@@ -144,42 +228,6 @@ const CartPage = () => {
       setLoading(false);
     }
   };
-
-  const OrderSummary = () => (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between text-sm">
-        <span className="text-text-muted">
-          Selected ({selectedItems.length}/{groupedItems.length} items)
-        </span>
-        <PriceFormatter amount={selectedSubTotal * rates[currency]} currency={currency} />
-      </div>
-      <div className="flex items-center justify-between text-sm">
-        <span className="text-text-muted">Discount</span>
-        <PriceFormatter amount={selectedDiscount * rates[currency]} currency={currency} />
-      </div>
-      <Separator />
-      <div className="flex items-center justify-between font-semibold text-lg">
-        <span className="text-text-primary">Total</span>
-        <PriceFormatter
-          amount={selectedTotal * rates[currency]}
-          currency={currency}
-          className="text-lg font-bold text-primary"
-        />
-      </div>
-      <Button
-        className="w-full rounded-full font-semibold tracking-wide"
-        size="lg"
-        disabled={loading || selectedItems.length === 0}
-        onClick={handleCheckout}
-      >
-        {loading
-          ? "Processing..."
-          : selectedItems.length === 0
-            ? "Select items to checkout"
-            : `Checkout (${selectedItems.length} item${selectedItems.length > 1 ? "s" : ""})`}
-      </Button>
-    </div>
-  );
 
   return (
     <div className="bg-bg pb-52 md:pb-10">
@@ -200,7 +248,11 @@ const CartPage = () => {
                         id="select-all"
                         checked={allSelected}
                         data-state={
-                          someSelected ? "indeterminate" : allSelected ? "checked" : "unchecked"
+                          someSelected
+                            ? "indeterminate"
+                            : allSelected
+                              ? "checked"
+                              : "unchecked"
                         }
                         onCheckedChange={toggleAll}
                         aria-label="Select all items"
@@ -286,7 +338,9 @@ const CartPage = () => {
                                     aria-label="Remove item"
                                   >
                                     <Trash className="w-4 h-4 md:w-5 md:h-5" />
-                                    <span className="hidden md:inline text-xs">Remove</span>
+                                    <span className="hidden md:inline text-xs">
+                                      Remove
+                                    </span>
                                   </TooltipTrigger>
                                   <TooltipContent className="font-bold bg-danger text-white">
                                     Remove from cart
@@ -302,7 +356,11 @@ const CartPage = () => {
                             }`}
                           >
                             <PriceFormatter
-                              amount={(product?.price as number) * itemCount * rates[currency]}
+                              amount={
+                                (product?.price as number) *
+                                itemCount *
+                                rates[currency]
+                              }
                               currency={currency}
                               className="font-bold text-lg text-primary"
                             />
@@ -324,7 +382,9 @@ const CartPage = () => {
                       {selectedItems.length < groupedItems.length && (
                         <button
                           onClick={() =>
-                            setSelectedIds(new Set(groupedItems.map((i) => i.product._id)))
+                            setSelectedIds(
+                              new Set(groupedItems.map((i) => i.product._id)),
+                            )
                           }
                           className="text-xs text-primary hover:underline transition-colors duration-200"
                         >
@@ -337,19 +397,35 @@ const CartPage = () => {
 
                 <div className="lg:col-span-1">
                   <div className="hidden md:block w-full bg-surface p-6 rounded-lg border border-border">
-                    <h2 className="text-xl font-semibold mb-4 text-text-primary">Order Summary</h2>
-                    <OrderSummary />
+                    <h2 className="text-xl font-semibold mb-4 text-text-primary">
+                      Order Summary
+                    </h2>
+                    <OrderSummary
+                      selectedItems={selectedItems}
+                      groupedItemsLength={groupedItems.length}
+                      selectedSubTotal={selectedSubTotal}
+                      selectedDiscount={selectedDiscount}
+                      selectedTotal={selectedTotal}
+                      rates={rates}
+                      currency={currency}
+                      loading={loading}
+                      onCheckout={handleCheckout}
+                    />
                   </div>
 
                   {addresses && (
                     <div className="bg-surface rounded-md mt-5 border border-border">
                       <Card>
                         <CardHeader>
-                          <CardTitle className="text-text-primary">Delivery Addresses</CardTitle>
+                          <CardTitle className="text-text-primary">
+                            Delivery Addresses
+                          </CardTitle>
                         </CardHeader>
                         <CardContent>
                           <RadioGroup
-                            defaultValue={addresses?.find((a) => a.default)?._id.toString()}
+                            defaultValue={addresses
+                              ?.find((a) => a.default)
+                              ?._id.toString()}
                           >
                             {addresses?.map((address) => (
                               <div
@@ -361,9 +437,13 @@ const CartPage = () => {
                                     : "text-text-primary"
                                 }`}
                               >
-                                <RadioGroupItem value={address._id.toString()} />
+                                <RadioGroupItem
+                                  value={address._id.toString()}
+                                />
                                 <Label className="grid gap-1.5 flex-1 cursor-pointer">
-                                  <span className="font-semibold">{address?.name}</span>
+                                  <span className="font-semibold">
+                                    {address?.name}
+                                  </span>
                                   <span className="text-sm text-text-muted">
                                     {address?.address}, {address?.city},{" "}
                                     {address?.state} {address?.zip}
@@ -383,8 +463,20 @@ const CartPage = () => {
 
                 <div className="md:hidden fixed bottom-0 left-0 w-full bg-surface pt-2 shadow-[0_-4px_16px_rgba(0,0,0,0.1)] border-t border-border">
                   <div className="p-4">
-                    <p className="text-sm font-semibold text-text-primary mb-3">Order Summary</p>
-                    <OrderSummary />
+                    <p className="text-sm font-semibold text-text-primary mb-3">
+                      Order Summary
+                    </p>
+                    <OrderSummary
+                      selectedItems={selectedItems}
+                      groupedItemsLength={groupedItems.length}
+                      selectedSubTotal={selectedSubTotal}
+                      selectedDiscount={selectedDiscount}
+                      selectedTotal={selectedTotal}
+                      rates={rates}
+                      currency={currency}
+                      loading={loading}
+                      onCheckout={handleCheckout}
+                    />
                   </div>
                 </div>
               </div>

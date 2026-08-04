@@ -1,5 +1,5 @@
 import { sanityFetch } from "../lib/live";
-import { Category } from "../../sanity.types";
+import { Category } from "@/sanity.types";
 import {
   BLOG_CATEGORIES,
   BRAND_QUERY,

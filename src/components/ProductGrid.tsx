@@ -14,8 +14,9 @@ import ProductCard from "./ProductCard";
 
 const query = groq`*[
   _type == "product" && (
-    variant == $variant ||
-    $variant in categories[]->slug.current
+    $tab == "all" ||
+    variant in $variantValues ||
+    count((categories[]->slug.current)[@ in $categorySlugs]) > 0
   )
 ] | order(name asc) {
   ...,"categories": categories[]->title
@@ -25,15 +26,18 @@ const ProductGrid = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedTab, setSelectedTab] = useState(productType[0]?.value || "");
+  const selectedTabConfig =
+    productType.find((item) => item.value === selectedTab) ?? productType[0];
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await client.fetch<Product[]>(
-          query,
-          { variant: selectedTab } as Record<string, unknown>,
-        );
+        const response = await client.fetch<Product[]>(query, {
+          tab: selectedTabConfig?.value ?? "all",
+          variantValues: selectedTabConfig?.variantValues ?? [],
+          categorySlugs: selectedTabConfig?.categorySlugs ?? [],
+        } as Record<string, unknown>);
         setProducts(response);
       } catch (error) {
         console.log("Product fetching Error", error);
@@ -42,7 +46,7 @@ const ProductGrid = () => {
       }
     };
     fetchData();
-  }, [selectedTab]);
+  }, [selectedTab, selectedTabConfig]);
 
   return (
     <Container className="flex flex-col lg:px-0 my-10">

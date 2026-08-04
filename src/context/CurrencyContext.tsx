@@ -1,14 +1,20 @@
 "use client";
 
 import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import {
   EXCHANGE_RATES,
   getLocaleConfig,
-  LocaleConfig,
   LOCALE_CONFIGS,
+  LocaleConfig,
   SupportedCurrency,
 } from "../../actions/currency";
 import { getExchangeRates } from "../../actions/getExchangeRates";
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 
 interface CurrencyContextValue {
   currency: SupportedCurrency;
@@ -22,14 +28,19 @@ interface CurrencyContextValue {
 const CurrencyContext = createContext<CurrencyContextValue | null>(null);
 
 export function CurrencyProvider({ children }: { children: ReactNode }) {
-  const [currency, setCurrencyState] = useState<SupportedCurrency>("usd");
+  const [currency, setCurrencyState] = useState<SupportedCurrency>(() => {
+    if (typeof window === "undefined") return "usd";
+
+    const saved = localStorage.getItem(
+      "preferred-currency",
+    ) as SupportedCurrency | null;
+    return saved && LOCALE_CONFIGS.some((c) => c.currency === saved)
+      ? saved
+      : "usd";
+  });
   const [rates, setRates] = useState(EXCHANGE_RATES);
 
   useEffect(() => {
-    const saved = localStorage.getItem("preferred-currency") as SupportedCurrency | null;
-    if (saved && LOCALE_CONFIGS.some((c) => c.currency === saved)) {
-      setCurrencyState(saved);
-    }
     getExchangeRates().then(setRates);
   }, []);
 
@@ -58,6 +69,7 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
 
 export function useCurrency() {
   const ctx = useContext(CurrencyContext);
-  if (!ctx) throw new Error("useCurrency must be used inside <CurrencyProvider>");
+  if (!ctx)
+    throw new Error("useCurrency must be used inside <CurrencyProvider>");
   return ctx;
 }

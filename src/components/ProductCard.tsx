@@ -9,9 +9,12 @@ import AddToCartButton from "./AddToCartButton";
 import PriceView from "./PriceView";
 import ProductSideMenu from "./ProductSideMenu";
 import { Title } from "./ui/text";
+import { getReviewStats } from "@/lib/reviewStats";
 
 const ProductCard = ({ product }: { product: Product }) => {
   const [imgLoaded, setImgLoaded] = useState(false);
+  const { totalCount, avgRating } = getReviewStats(product?._id);
+  const fullStars = Math.round(avgRating);
   return (
     <div className="text-sm border border-border rounded-md bg-surface group">
       <div className="relative group overflow-hidden bg-product-bg">
@@ -78,17 +81,25 @@ const ProductCard = ({ product }: { product: Product }) => {
               <StarIcon
                 size={13}
                 key={index}
-                className={index < 4 ? "text-accent" : "text-text-muted"}
-                fill={index < 4 ? "var(--accent)" : "var(--text-muted)"}
+                className={
+                  index < fullStars ? "text-accent" : "text-muted-foreground"
+                }
+                fill={
+                  index < fullStars
+                    ? "var(--color-accent)"
+                    : "var(--color-muted-foreground)"
+                }
               />
             ))}
           </div>
-          <p className="text-accent text-xs tracking-wide">5 Reviews</p>
+          <p className="text-text-secondary text-xs tracking-wide">
+            {totalCount.toLocaleString()} Reviews
+          </p>
         </div>
         <div className="flex items-center gap-2.5">
           <p className="font-medium">In Stock</p>
           <p
-            className={`${product?.stock === 0 ? "text-danger" : "text-accent font-semibold"}`}
+            className={`${product?.stock === 0 ? "text-danger" : "text-text-secondary font-semibold"}`}
           >
             {(product?.stock as number) > 0
               ? product?.stock

@@ -5,6 +5,7 @@ import ImageView from "@/components/ImageView";
 import PriceView from "@/components/PriceView";
 import ProductCharacteristics from "@/components/ProductCharacteristics";
 import ProductTabs from "@/components/ProductTabs";
+import { getReviewStats } from "@/lib/reviewStats";
 import { getProductBySlug } from "@/sanity/queries";
 import {
   CheckCircle,
@@ -25,6 +26,8 @@ const SingleProductPage = async ({
 }) => {
   const { slug } = await params;
   const product = await getProductBySlug(slug);
+  const { totalCount, avgRating } = getReviewStats(product?._id);
+  const fullStars = Math.round(avgRating);
 
   if (!product) return null;
 
@@ -48,12 +51,18 @@ const SingleProductPage = async ({
                 <StarIcon
                   key={index}
                   size={14}
-                  className="text-accent"
-                  fill="var(--color-accent)"
+                  className={
+                    index < fullStars ? "text-accent" : "text-muted-foreground"
+                  }
+                  fill={
+                    index < fullStars
+                      ? "var(--color-accent)"
+                      : "var(--color-muted-foreground)"
+                  }
                 />
               ))}
               <p className="text-xs font-semibold text-text-muted ml-1">
-                (120 reviews)
+                ({totalCount.toLocaleString()} reviews)
               </p>
             </div>
           </div>

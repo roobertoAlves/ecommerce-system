@@ -36,12 +36,12 @@ const LatestBlog = async () => {
                       {item?.title}
                     </p>
                   ))}
-                  <span className="absolute left-0 -bottom-1.5 bg-text-muted/30 inline-block w-full h-[2px] group-hover:bg-primary hover:cursor-pointer hoverEffect" />
+                  <span className="absolute left-0 -bottom-1.5 bg-text-muted/30 inline-block w-full h-0.5 group-hover:bg-primary hover:cursor-pointer hoverEffect" />
                 </div>
                 <p className="flex items-center gap-1 text-text-muted relative group hover:cursor-pointer hover:text-primary hoverEffect">
                   <Calendar size={15} />{" "}
                   {dayjs(blog.publishedAt).format("DD MMM, YYYY")}
-                  <span className="absolute left-0 -bottom-1.5 bg-text-muted/30 inline-block w-full h-[2px] group-hover:bg-primary hoverEffect" />
+                  <span className="absolute left-0 -bottom-1.5 bg-text-muted/30 inline-block w-full h-0.5 group-hover:bg-primary hoverEffect" />
                 </p>
               </div>
               <Link

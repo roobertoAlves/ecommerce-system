@@ -28,12 +28,45 @@ export const categoriesData = [
 ];
 
 export const productType = [
-  { title: "Gadget", value: "gadget" },
-  { title: "Smartphone", value: "smartphone" },
-  { title: "Mobile", value: "mobile" },
-  { title: "Washing Machine", value: "washing-machine" },
-  { title: "Air Conditioner", value: "air-conditioner" },
-  { title: "Kitchen Appliance", value: "kitchen-appliance" },
-  { title: "Refrigerator", value: "refrigerator" },
-  { title: "Appliance", value: "appliance" },
+  {
+    title: "All",
+    value: "all",
+    variantValues: [] as string[],
+    categorySlugs: [] as string[],
+  },
+  {
+    title: "Gadget",
+    value: "gadget",
+    variantValues: ["gadget"],
+    categorySlugs: ["gadget", "gadgets", "gadget-accessories"],
+  },
+  {
+    title: "Smartphones",
+    value: "smartphones",
+    variantValues: [],
+    categorySlugs: ["smartphone", "smartphones", "mobile", "mobiles"],
+  },
+  {
+    title: "Appliances",
+    value: "appliances",
+    variantValues: ["appliances"],
+    categorySlugs: [
+      "appliance",
+      "appliances",
+      "air-conditioner",
+      "air-conditioners",
+      "kitchen-appliance",
+      "kitchen-appliances",
+      "washing-machine",
+      "washing-machines",
+      "refrigerator",
+      "refrigerators",
+    ],
+  },
+  {
+    title: "Others",
+    value: "others",
+    variantValues: ["others"],
+    categorySlugs: ["others"],
+  },
 ];

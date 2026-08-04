@@ -15,14 +15,17 @@ const HomeTabBar = ({ selectedTab, onTabSelect }: Props) => {
             key={item?.title}
             onClick={() => onTabSelect(item?.value)}
             className={`border px-4 py-1.5 md:px-6 md:py-2 rounded-full transition-all duration-300
-                hover:bg-primary hover:border-primary hover:text-white
-                ${selectedTab === item?.value ? "bg-primary text-white border-primary" : "bg-primary/10 border-primary/30 text-text-primary"}`}
+                hover:bg-btn-primary hover:border-btn-primary hover:text-primary-foreground
+                ${selectedTab === item?.value ? "bg-btn-primary text-primary-foreground border-btn-primary" : "bg-surface text-text-primary border-border"}`}
           >
             {item?.title}
           </button>
         ))}
       </div>
-      <Link href={"/shop"} className="text-sm font-semibold text-primary hover:text-primary-dark transition-colors duration-300">
+      <Link
+        href={"/shop"}
+        className="text-sm font-semibold text-text-secondary hover:text-btn-primary transition-colors duration-300"
+      >
         See All
       </Link>
     </div>
