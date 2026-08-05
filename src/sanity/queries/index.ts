@@ -16,11 +16,11 @@ import {
 const getCategories = async (quantity?: number): Promise<Category[]> => {
   try {
     const query = quantity
-      ? `*[_type == 'category'] | order(name asc) [0...$quantity] {
+      ? `*[_type == 'category'] | order(title asc) [0...$quantity] {
           ...,
           "productCount": count(*[_type == "product" && references(^._id)])
         }`
-      : `*[_type == 'category'] | order(name asc) {
+      : `*[_type == 'category'] | order(title asc) {
           ...,
           "productCount": count(*[_type == "product" && references(^._id)])
         }`;
@@ -31,6 +31,20 @@ const getCategories = async (quantity?: number): Promise<Category[]> => {
     return (data as Category[]) ?? [];
   } catch (error) {
     console.log("Error fetching categories", error);
+    return [];
+  }
+};
+
+const getFeaturedCategories = async (): Promise<Category[]> => {
+  try {
+    const query = `*[_type == 'category' && featured == true] | order(title asc) {
+      ...,
+      "productCount": count(*[_type == "product" && references(^._id)])
+    }`;
+    const { data } = await sanityFetch({ query });
+    return (data as Category[]) ?? [];
+  } catch (error) {
+    console.log("Error fetching featured categories", error);
     return [];
   }
 };
@@ -54,6 +68,7 @@ const getLatestBlogs = async () => {
     return [];
   }
 };
+
 const getDealProducts = async () => {
   try {
     const { data } = await sanityFetch({ query: DEAL_PRODUCTS });
@@ -63,20 +78,20 @@ const getDealProducts = async () => {
     return [];
   }
 };
+
 const getProductBySlug = async (slug: string) => {
   try {
     const product = await sanityFetch({
       query: PRODUCT_BY_SLUG_QUERY,
-      params: {
-        slug,
-      },
+      params: { slug },
     });
     return product?.data || null;
   } catch (error) {
-    console.error("Error fetching product by ID:", error);
+    console.error("Error fetching product by slug:", error);
     return null;
   }
 };
+
 const getBrand = async (slug: string): Promise<string | null> => {
   try {
     const product = await sanityFetch({
@@ -86,10 +101,11 @@ const getBrand = async (slug: string): Promise<string | null> => {
     const results = product?.data as Array<{ brandName: string | null }> | null;
     return results?.[0]?.brandName ?? null;
   } catch (error) {
-    console.error("Error fetching product by ID:", error);
+    console.error("Error fetching brand:", error);
     return null;
   }
 };
+
 const getMyOrders = async (userId: string) => {
   try {
     const orders = await sanityFetch({
@@ -98,10 +114,11 @@ const getMyOrders = async (userId: string) => {
     });
     return orders?.data || null;
   } catch (error) {
-    console.error("Error fetching product by ID:", error);
+    console.error("Error fetching orders:", error);
     return null;
   }
 };
+
 const getAllBlogs = async (quantity: number) => {
   try {
     const { data } = await sanityFetch({
@@ -110,7 +127,7 @@ const getAllBlogs = async (quantity: number) => {
     });
     return data ?? [];
   } catch (error) {
-    console.log("Error fetching all brands:", error);
+    console.log("Error fetching all blogs:", error);
     return [];
   }
 };
@@ -123,18 +140,17 @@ const getSingleBlog = async (slug: string) => {
     });
     return data ?? [];
   } catch (error) {
-    console.log("Error fetching all brands:", error);
+    console.log("Error fetching single blog:", error);
     return [];
   }
 };
+
 const getBlogCategories = async () => {
   try {
-    const { data } = await sanityFetch({
-      query: BLOG_CATEGORIES,
-    });
+    const { data } = await sanityFetch({ query: BLOG_CATEGORIES });
     return data ?? [];
   } catch (error) {
-    console.log("Error fetching all brands:", error);
+    console.log("Error fetching blog categories:", error);
     return [];
   }
 };
@@ -147,10 +163,11 @@ const getOthersBlog = async (slug: string, quantity: number) => {
     });
     return data ?? [];
   } catch (error) {
-    console.log("Error fetching all brands:", error);
+    console.log("Error fetching other blogs:", error);
     return [];
   }
 };
+
 export {
   getAllBlogs,
   getAllBrands,
@@ -158,6 +175,7 @@ export {
   getBrand,
   getCategories,
   getDealProducts,
+  getFeaturedCategories,
   getLatestBlogs,
   getMyOrders,
   getOthersBlog,

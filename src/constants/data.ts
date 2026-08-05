@@ -16,57 +16,54 @@ export const quickLinksData = [
 ];
 
 export const categoriesData = [
-  { title: "Fashion", href: "/category/fashion" },
-  { title: "Home & Garden", href: "/category/home-garden" },
-  { title: "Mobiles", href: "/category/mobiles" },
-  { title: "Appliances", href: "/category/appliances" },
-  { title: "Air Conditioners", href: "/category/air-conditioners" },
-  { title: "Kitchen Appliances", href: "/category/kitchen-appliances" },
-  { title: "Gadget Accessories", href: "/category/gadget-accessories" },
-  { title: "Smartphones", href: "/category/smartphones" },
-  { title: "Washing Machines", href: "/category/washing-machines" },
+  { title: "Fashion", slug: "fashion" },
+  { title: "Home & Garden", slug: "home-and-garden" },
+  { title: "Smartphones", slug: "smartphones" },
+  { title: "Mobiles", slug: "mobiles" },
+  { title: "Appliances", slug: "appliances" },
+  { title: "Air Conditioners", slug: "air-conditioners" },
+  { title: "Kitchen Appliances", slug: "kitchen-appliances" },
+  { title: "Gadget Accessories", slug: "gadget-accessories" },
+  { title: "Washing Machine", slug: "washing-machine" },
+  { title: "Refrigerators", slug: "refrigerators" },
+  { title: "Television", slug: "television" },
 ];
 
 export const productType = [
   {
     title: "All",
     value: "all",
-    variantValues: [] as string[],
     categorySlugs: [] as string[],
   },
   {
     title: "Gadget",
     value: "gadget",
-    variantValues: ["gadget"],
-    categorySlugs: ["gadget", "gadgets", "gadget-accessories"],
+    categorySlugs: [
+      "gadget-accessories",
+      "airbuds",
+      "cameras",
+      "smart-watches",
+      "tablets",
+    ],
   },
   {
     title: "Smartphones",
     value: "smartphones",
-    variantValues: [],
-    categorySlugs: ["smartphone", "smartphones", "mobile", "mobiles"],
+    categorySlugs: [
+      "smartphones",
+      "mobiles",
+    ],
   },
   {
     title: "Appliances",
     value: "appliances",
-    variantValues: ["appliances"],
     categorySlugs: [
-      "appliance",
       "appliances",
-      "air-conditioner",
       "air-conditioners",
-      "kitchen-appliance",
       "kitchen-appliances",
       "washing-machine",
-      "washing-machines",
-      "refrigerator",
       "refrigerators",
+      "television",
     ],
-  },
-  {
-    title: "Others",
-    value: "others",
-    variantValues: ["others"],
-    categorySlugs: ["others"],
   },
 ];

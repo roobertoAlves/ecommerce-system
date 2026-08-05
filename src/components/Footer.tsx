@@ -45,7 +45,7 @@ const Footer = () => {
               {categoriesData?.map((item) => (
                 <li key={item?.title}>
                   <Link
-                    href={`/category/${item?.href}`}
+                    href={{ pathname: "/shop", query: { category: item?.slug } }}
                     className="text-text-muted hover:text-primary transition-colors duration-300 text-sm font-medium"
                   >
                     {item?.title}

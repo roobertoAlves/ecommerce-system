@@ -15,7 +15,6 @@ import ProductCard from "./ProductCard";
 const query = groq`*[
   _type == "product" && (
     $tab == "all" ||
-    variant in $variantValues ||
     count((categories[]->slug.current)[@ in $categorySlugs]) > 0
   )
 ] | order(name asc) {
@@ -35,7 +34,6 @@ const ProductGrid = () => {
       try {
         const response = await client.fetch<Product[]>(query, {
           tab: selectedTabConfig?.value ?? "all",
-          variantValues: selectedTabConfig?.variantValues ?? [],
           categorySlugs: selectedTabConfig?.categorySlugs ?? [],
         } as Record<string, unknown>);
         setProducts(response);

@@ -131,9 +131,10 @@ function hashString(value: string): number {
 
 export function getReviewStats(seedSource: string | undefined | null) {
   const seed = hashString(seedSource ?? "default");
+  const rawRating = 3.5 + (seed % 16) / 10; 
   return {
-    totalCount: 18 + (seed % 412),
-    avgRating: 3.8 + (seed % 13) / 10,
+    totalCount: 12 + (seed % 489),
+    avgRating: Math.min(5.0, rawRating),
   };
 }
 

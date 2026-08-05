@@ -28,17 +28,17 @@ interface CurrencyContextValue {
 const CurrencyContext = createContext<CurrencyContextValue | null>(null);
 
 export function CurrencyProvider({ children }: { children: ReactNode }) {
-  const [currency, setCurrencyState] = useState<SupportedCurrency>(() => {
-    if (typeof window === "undefined") return "usd";
+  const [currency, setCurrencyState] = useState<SupportedCurrency>("usd");
+  const [rates, setRates] = useState(EXCHANGE_RATES);
 
+  useEffect(() => {
     const saved = localStorage.getItem(
       "preferred-currency",
     ) as SupportedCurrency | null;
-    return saved && LOCALE_CONFIGS.some((c) => c.currency === saved)
-      ? saved
-      : "usd";
-  });
-  const [rates, setRates] = useState(EXCHANGE_RATES);
+    if (saved && LOCALE_CONFIGS.some((c) => c.currency === saved)) {
+      setCurrencyState(saved);
+    }
+  }, []);
 
   useEffect(() => {
     getExchangeRates().then(setRates);

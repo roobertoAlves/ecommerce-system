@@ -4,7 +4,9 @@ import { Category } from "../../sanity.types";
 import { urlFor } from "../sanity/lib/image";
 import Title from "./Title";
 
-const HomeCategories = ({ categories }: { categories: Category[] }) => {
+type CategoryWithCount = Category & { productCount?: number };
+
+const HomeCategories = ({ categories }: { categories: CategoryWithCount[] }) => {
   return (
     <div className="bg-surface border border-border/20 my-10 md:my-20 p-5 lg:p-7 rounded-md">
       <Title className="border-b pb-3">Popular Categories</Title>
@@ -34,7 +36,7 @@ const HomeCategories = ({ categories }: { categories: Category[] }) => {
                 {category?.title}
               </h3>
               <p className="text-sm text-text-muted">
-                <span className="font-bold text-text-secondary">{`(${category?.productCount})`}</span>{" "}
+                <span className="font-bold text-text-secondary">{`(${category?.productCount ?? 0})`}</span>{" "}
                 items Available
               </p>
             </div>

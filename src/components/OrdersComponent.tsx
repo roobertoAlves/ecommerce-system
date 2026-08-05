@@ -28,11 +28,14 @@ const OrdersComponent = ({ orders }: { orders: MY_ORDERS_QUERYResult }) => {
         <TooltipProvider>
           {orders.map((order) => (
             <Tooltip key={order?.orderNumber}>
-              <TooltipTrigger>
-                <TableRow
-                  className="cursor-pointer hover:bg-bg-secondary h-12"
-                  onClick={() => setSelectedOrder(order)}
-                >
+              <TooltipTrigger
+                render={
+                  <TableRow
+                    className="cursor-pointer hover:bg-bg-secondary h-12"
+                    onClick={() => setSelectedOrder(order)}
+                  />
+                }
+              >
                   <TableCell className="font-medium">
                     {order.orderNumber?.slice(-10) ?? "N/A"}...
                   </TableCell>
@@ -77,14 +80,13 @@ const OrdersComponent = ({ orders }: { orders: MY_ORDERS_QUERYResult }) => {
                       event.stopPropagation();
                       handleDelete();
                     }}
-                    className="flex items-center justify-center group"
+                    className="text-center group"
                   >
                     <X
                       size={20}
-                      className="group-hover:text-primary hoverEffect"
+                      className="group-hover:text-primary hoverEffect mx-auto"
                     />
                   </TableCell>
-                </TableRow>
               </TooltipTrigger>
               <TooltipContent>
                 <p>Click to see order details</p>

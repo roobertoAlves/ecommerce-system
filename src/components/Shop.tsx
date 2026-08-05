@@ -33,6 +33,14 @@ const Shop = ({ categories, brands }: Props) => {
   const [selectedPrices, setSelectedPrices] = useState<string[]>([]);
 
   useEffect(() => {
+    setSelectedCategories(categoryParams ? [categoryParams] : []);
+  }, [categoryParams]);
+
+  useEffect(() => {
+    setSelectedBrands(brandParams ? [brandParams] : []);
+  }, [brandParams]);
+
+  useEffect(() => {
     let cancelled = false;
 
     const load = async () => {
