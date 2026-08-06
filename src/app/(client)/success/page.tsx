@@ -5,10 +5,10 @@ import { motion } from "motion/react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import useStore from "../../../../store";
 
-const SuccessPage = () => {
+const SuccessContent = () => {
   const { user } = useUser();
   const t = useTranslations("success");
   const { resetCart } = useStore();
@@ -107,5 +107,11 @@ const SuccessPage = () => {
     </div>
   );
 };
+
+const SuccessPage = () => (
+  <Suspense>
+    <SuccessContent />
+  </Suspense>
+);
 
 export default SuccessPage;
