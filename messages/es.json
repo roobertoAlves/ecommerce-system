@@ -3,79 +3,78 @@
   "common": {
     "seeAll": "Ver Todo", "viewAll": "Ver Todos", "browseProducts": "Ver Productos",
     "continueShopping": "Seguir Comprando", "loading": "Cargando...", "noProducts": "No hay productos disponibles",
-    "inStock": "En Stock", "outOfStock": "Sin Stock", "unavailable": "No disponible", "reviews": "ReseÃ±as",
-    "resetSelection": "Limpiar SelecciÃ³n", "basedOn": "Basado en", "loadMore": "Cargar MÃ¡s", "loadLess": "Ver Menos", "showLess": "Ver Menos",
-    "details": "Detalles", "available": "Disponible", "collection": "ColecciÃ³n", "units": "unidades",
-    "restockingSoon": "Reabasteciendo pronto.", "checkBackLater": "Por favor, regresa mÃ¡s tarde o explora otras categorÃ­as.",
+    "inStock": "En Stock", "outOfStock": "Sin Stock", "unavailable": "No disponible", "reviews": "Reseñas",
+    "resetSelection": "Limpiar Selección", "basedOn": "Basado en", "loadMore": "Cargar Más", "loadLess": "Ver Menos", "showLess": "Ver Menos",
+    "details": "Detalles", "available": "Disponible", "collection": "Colección", "units": "unidades",
+    "restockingSoon": "Reabasteciendo pronto.", "checkBackLater": "Por favor, regresa más tarde o explora otras categorías.",
     "noProductsMatching": "Lo sentimos, no hay productos que coincidan con", "criteria": "criterios en este momento."
   },
-  "header": { "regionCurrency": "RegiÃ³n y Moneda", "pricesAdjust": "Los precios y mÃ©todos de pago se ajustan a la regiÃ³n seleccionada." },
+  "header": { "regionCurrency": "Región y Moneda", "pricesAdjust": "Los precios y métodos de pago se ajustan a la región seleccionada." },
   "home": {
-    "popularCategories": "CategorÃ­as Populares", "itemsAvailable": "artÃ­culos Disponibles", "shopByBrands": "Comprar por Marca",
-    "bannerTitle": "Hasta 50% de descuento en\nArtÃ­culos Seleccionados", "bannerCta": "Comprar Ahora",
-    "freeDelivery": "EnvÃ­o Gratis", "freeDeliveryDesc": "EnvÃ­o gratis en pedidos sobre $100",
-    "freeReturn": "DevoluciÃ³n Gratis", "freeReturnDesc": "EnvÃ­o gratis en pedidos sobre $100",
+    "popularCategories": "Categorías Populares", "itemsAvailable": "artículos Disponibles", "shopByBrands": "Comprar por Marca",
+    "bannerTitle": "Hasta 50% de descuento en\nArtículos Seleccionados", "bannerCta": "Comprar Ahora",
+    "freeDelivery": "Envío Gratis", "freeDeliveryDesc": "Envío gratis en pedidos sobre $100",
+    "freeReturn": "Devolución Gratis", "freeReturnDesc": "Envío gratis en pedidos sobre $100",
     "customerSupport": "Soporte al Cliente", "customerSupportDesc": "Soporte amigable 24/7",
-    "moneyBack": "GarantÃ­a de DevoluciÃ³n", "moneyBackDesc": "Calidad verificada por nuestro equipo",
-    "latestBlog": "Ãšltimas Publicaciones", "productLoading": "Cargando productos..."
+    "moneyBack": "Garantía de Devolución", "moneyBackDesc": "Calidad verificada por nuestro equipo",
+    "latestBlog": "Últimas Publicaciones", "productLoading": "Cargando productos..."
   },
-  "shop": { "title": "Encuentra los productos que necesitas", "resetFilters": "Limpiar Filtros", "productCategories": "CategorÃ­as de Productos", "brands": "Marcas", "price": "Precio", "productLoading": "Cargando productos..." },
+  "shop": { "title": "Encuentra los productos que necesitas", "resetFilters": "Limpiar Filtros", "productCategories": "Categorías de Productos", "brands": "Marcas", "price": "Precio", "productLoading": "Cargando productos..." },
   "product": {
-    "addToCart": "Agregar al Carrito", "inStock": "En Stock", "outOfStock": "Sin Stock", "reviews": "reseÃ±as",
-    "description": "DescripciÃ³n", "additionalInfo": "InformaciÃ³n Adicional", "reviewsTab": "ReseÃ±as",
-    "characteristics": "CaracterÃ­sticas", "brand": "Marca", "collection": "ColecciÃ³n", "type": "Tipo",
-    "stock": "Stock", "sku": "SKU", "category": "CategorÃ­a", "variant": "Variante", "status": "Estado",
-    "noDescription": "No hay descripciÃ³n disponible para este producto.",
-    "freeDelivery": "EnvÃ­o Gratis", "freeDeliveryDesc": "Ingresa tu cÃ³digo postal para ver opciones de entrega",
-    "returnDelivery": "DevoluciÃ³n", "returnDeliveryDesc": "Devoluciones gratuitas en 30 dÃ­as.",
-    "compareColor": "Comparar Color", "askQuestion": "Hacer una Pregunta", "deliveryReturn": "Entrega y DevoluciÃ³n", "share": "Compartir",
-    "loadMoreReviews": "Cargar MÃ¡s ReseÃ±as", "remaining": "restantes", "showLessReviews": "Ver Menos",
+    "addToCart": "Agregar al Carrito", "inStock": "En Stock", "outOfStock": "Sin Stock", "reviews": "reseñas",
+    "description": "Descripción", "additionalInfo": "Información Adicional", "reviewsTab": "Reseñas",
+    "characteristics": "Características", "brand": "Marca", "collection": "Colección", "type": "Tipo",
+    "stock": "Stock", "sku": "SKU", "category": "Categoría", "variant": "Variante", "status": "Estado",
+    "noDescription": "No hay descripción disponible para este producto.",
+    "freeDelivery": "Envío Gratis", "freeDeliveryDesc": "Ingresa tu código postal para ver opciones de entrega",
+    "returnDelivery": "Devolución", "returnDeliveryDesc": "Devoluciones gratuitas en 30 días.",
+    "compareColor": "Comparar Color", "askQuestion": "Hacer una Pregunta", "deliveryReturn": "Entrega y Devolución", "share": "Compartir",
+    "loadMoreReviews": "Cargar Más Reseñas", "remaining": "restantes", "showLessReviews": "Ver Menos",
     "basedOn": "Basado en", "quantity": "Cantidad", "subtotal": "Subtotal",
     "details": "Detalles"
   },
   "cart": {
     "title": "Carrito de Compras", "selectAll": "Seleccionar Todo", "selected": "seleccionado(s)", "orderSummary": "Resumen del Pedido",
-    "deliveryAddresses": "Direcciones de Entrega", "addNewAddress": "Agregar DirecciÃ³n", "resetCart": "Vaciar Carrito",
-    "reselectAll": "Volver a seleccionar todo", "processing": "Procesando...", "selectItemsCheckout": "Selecciona artÃ­culos para pagar",
+    "deliveryAddresses": "Direcciones de Entrega", "addNewAddress": "Agregar Dirección", "resetCart": "Vaciar Carrito",
+    "reselectAll": "Volver a seleccionar todo", "processing": "Procesando...", "selectItemsCheckout": "Selecciona artículos para pagar",
     "checkout": "Finalizar Compra", "variantLabel": "Variante", "statusLabel": "Estado", "removeItem": "Eliminar",
-    "removeFromCart": "Eliminar del carrito", "confirmResetCart": "Â¿EstÃ¡s seguro de que quieres vaciar el carrito? Esta acciÃ³n no se puede deshacer.",
+    "removeFromCart": "Eliminar del carrito", "confirmResetCart": "¿Estás seguro de que quieres vaciar el carrito? Esta acción no se puede deshacer.",
     "productRemovedToast": "Producto eliminado", "total": "Total", "discount": "Descuento", "subtotal": "Subtotal",
     "details": "Detalles",
-    "empty": "Carrito VacÃ­o", "emptyDesc": "Tu carrito estÃ¡ vacÃ­o. Â¡Empieza a comprar!",
-    "quantityDecreased": "Â¡Cantidad reducida exitosamente!", "quantityIncreased": "Â¡Cantidad aumentada exitosamente!", "cantAddMore": "No se puede agregar mÃ¡s que el stock disponible!"
+    "empty": "Carrito Vacío", "emptyDesc": "Tu carrito está vacío. ¡Empieza a comprar!",
+    "quantityDecreased": "¡Cantidad reducida exitosamente!", "quantityIncreased": "¡Cantidad aumentada exitosamente!", "cantAddMore": "No se puede agregar más que el stock disponible!"
   },
   "wishlist": {
-    "empty": "Tu lista de deseos estÃ¡ vacÃ­a", "emptyDesc": "Los artÃ­culos aÃ±adidos a favoritos aparecerÃ¡n aquÃ­",
-    "product": "Producto", "category": "CategorÃ­a", "type": "Tipo", "status": "Estado", "price": "Precio", "action": "AcciÃ³n",
-    "reset": "Vaciar Favoritos", "resetConfirm": "Â¿EstÃ¡s seguro de que quieres vaciar los favoritos?",
-    "resetSuccess": "Â¡Favoritos vaciados exitosamente!", "itemRemoved": "ArtÃ­culo eliminado de favoritos",
-    "noAccess": "Inicia sesiÃ³n para ver tus favoritos. Â¡No pierdas los productos de tu carrito!"
+    "empty": "Tu lista de deseos está vacía", "emptyDesc": "Los artículos añadidos a favoritos aparecerán aquí",
+    "product": "Producto", "category": "Categoría", "type": "Tipo", "status": "Estado", "price": "Precio", "action": "Acción",
+    "reset": "Vaciar Favoritos", "resetConfirm": "¿Estás seguro de que quieres vaciar los favoritos?",
+    "resetSuccess": "¡Favoritos vaciados exitosamente!", "itemRemoved": "Artículo eliminado de favoritos",
+    "noAccess": "Inicia sesión para ver tus favoritos. ¡No pierdas los productos de tu carrito!"
   },
   "orders": {
-    "title": "Lista de Pedidos", "orderNumber": "NÃºmero de Pedido", "date": "Fecha", "customer": "Cliente",
-    "email": "Correo", "total": "Total", "status": "Estado", "invoiceNumber": "NÃºmero de Factura",
+    "title": "Lista de Pedidos", "orderNumber": "Número de Pedido", "date": "Fecha", "customer": "Cliente",
+    "email": "Correo", "total": "Total", "status": "Estado", "invoiceNumber": "Número de Factura",
     "clickDetails": "Haz clic para ver detalles del pedido", "noOrders": "No se encontraron pedidos",
-    "noOrdersText": "Parece que aÃºn no has realizado ningÃºn pedido. Â¡Empieza a comprar para ver tus pedidos aquÃ­!",
+    "noOrdersText": "Parece que aún no has realizado ningún pedido. ¡Empieza a comprar para ver tus pedidos aquí!",
     "details": "Detalles del Pedido", "product": "Producto", "quantity": "Cantidad", "price": "Precio",
     "discount": "Descuento", "subtotal": "Subtotal",
-    "details": "Detalles", "downloadInvoice": "Descargar Factura", "deleteAdminOnly": "EliminaciÃ³n solo para Admin"
+    "downloadInvoice": "Descargar Factura", "deleteAdminOnly": "Eliminación solo para Admin"
   },
-  "blog": { "title": "Blog", "categories": "CategorÃ­as del Blog", "latest": "Ãšltimas Publicaciones", "backTo": "Volver al blog" },
+  "blog": { "title": "Blog", "categories": "Categorías del Blog", "latest": "Últimas Publicaciones", "backTo": "Volver al blog" },
   "footer": {
-    "quickLinks": "Links RÃ¡pidos", "categories": "CategorÃ­as", "newsletter": "Newsletter",
-    "newsletterText": "SuscrÃ­bete a nuestro boletÃ­n para estar al dÃ­a con las Ãºltimas noticias y ofertas.",
+    "quickLinks": "Links Rápidos", "categories": "Categorías", "newsletter": "Newsletter",
+    "newsletterText": "Suscríbete a nuestro boletín para estar al día con las últimas noticias y ofertas.",
     "emailPlaceholder": "Ingresa tu correo", "subscribe": "Suscribirse", "allRights": "Todos los derechos reservados.",
-    "visit": "VisÃ­tanos", "visitDesc": "Ciudad de MÃ©xico, MÃ©xico", "call": "LlÃ¡manos",
-    "hours": "Horario de AtenciÃ³n", "hoursDesc": "Lun â€“ Vie: 9 AM â€“ 6 PM", "emailUs": "EscrÃ­benos"
+    "visit": "Visítanos", "visitDesc": "Ciudad de México, México", "call": "Llámanos",
+    "hours": "Horario de Atención", "hoursDesc": "Lun – Vie: 9 AM – 6 PM", "emailUs": "Escríbenos"
   },
-  "auth": { "noAccess": "Inicia sesiÃ³n para ver este contenido.", "signIn": "Iniciar SesiÃ³n", "signUp": "Registrarse" },
+  "auth": { "noAccess": "Inicia sesión para ver este contenido.", "signIn": "Iniciar Sesión", "signUp": "Registrarse" },
   "success": {
-    "title": "Â¡Pedido Confirmado!", "thankYou": "Â¡Gracias, {name}! ðŸŽ‰", "thankYouGuest": "Â¡Gracias por tu compra! ðŸŽ‰",
-    "processingOrder": "Estamos procesando tu pedido y lo enviaremos pronto. RecibirÃ¡s un correo de confirmaciÃ³n en breve.",
-    "orderNumber": "NÃºmero de Pedido", "home": "Inicio", "myOrders": "Mis Pedidos", "keepShopping": "Seguir Comprando"
+    "title": "¡Pedido Confirmado!", "thankYou": "¡Gracias, {name}! 🎉", "thankYouGuest": "¡Gracias por tu compra! 🎉",
+    "processingOrder": "Estamos procesando tu pedido y lo enviaremos pronto. Recibirás un correo de confirmación en breve.",
+    "orderNumber": "Número de Pedido", "home": "Inicio", "myOrders": "Mis Pedidos", "keepShopping": "Seguir Comprando"
   },
-  "favorite": { "added": "Â¡Producto agregado exitosamente!", "removed": "Â¡Producto eliminado exitosamente!" },
-  "pages": { "aboutTitle": "Sobre Nosotros", "contactTitle": "ContÃ¡ctanos", "privacyTitle": "PolÃ­tica de Privacidad", "termsTitle": "TÃ©rminos y Condiciones", "faqTitle": "Preguntas Frecuentes", "helpTitle": "Ayuda" },
+  "favorite": { "added": "¡Producto agregado exitosamente!", "removed": "¡Producto eliminado exitosamente!" },
+  "pages": { "aboutTitle": "Sobre Nosotros", "contactTitle": "Contáctanos", "privacyTitle": "Política de Privacidad", "termsTitle": "Términos y Condiciones", "faqTitle": "Preguntas Frecuentes", "helpTitle": "Ayuda" },
   "deals": { "title": "Ofertas de la Semana" }
 }
-

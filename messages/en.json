@@ -155,7 +155,6 @@
     "price": "Price",
     "discount": "Discount",
     "subtotal": "Subtotal",
-    "details": "Details",
     "downloadInvoice": "Download Invoice",
     "deleteAdminOnly": "Delete method applied for Admin"
   },
@@ -174,7 +173,7 @@
     "subscribe": "Subscribe",
     "allRights": "All rights reserved.",
     "visit": "Visit Us",
-    "visitDesc": "SÃ£o Paulo, Brazil",
+    "visitDesc": "São Paulo, Brazil",
     "call": "Call Us",
     "hours": "Working Hours",
     "hoursDesc": "Mon â€“ Fri: 9 AM â€“ 6 PM",
@@ -187,8 +186,8 @@
   },
   "success": {
     "title": "Order Confirmed!",
-    "thankYou": "Thank you, {name}! ðŸŽ‰",
-    "thankYouGuest": "Thank you for your purchase! ðŸŽ‰",
+    "thankYou": "Thank you, {name}! 🎉",
+    "thankYouGuest": "Thank you for your purchase! 🎉",
     "processingOrder": "We're processing your order and will ship it soon. A confirmation email will be sent to your inbox shortly.",
     "orderNumber": "Order Number",
     "home": "Home",

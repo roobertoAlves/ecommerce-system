@@ -1,81 +1,80 @@
 ﻿{
-  "nav": { "home": "Start", "shop": "Shop", "blog": "Blog", "hotDeal": "Angebote", "about": "Ãœber uns" },
+  "nav": { "home": "Start", "shop": "Shop", "blog": "Blog", "hotDeal": "Angebote", "about": "Über uns" },
   "common": {
     "seeAll": "Alle ansehen", "viewAll": "Alle anzeigen", "browseProducts": "Produkte ansehen",
-    "continueShopping": "Weiter einkaufen", "loading": "Laden...", "noProducts": "Keine Produkte verfÃ¼gbar",
-    "inStock": "Auf Lager", "outOfStock": "Nicht verfÃ¼gbar", "unavailable": "Nicht verfÃ¼gbar", "reviews": "Bewertungen",
-    "resetSelection": "Auswahl zurÃ¼cksetzen", "basedOn": "Basierend auf", "loadMore": "Mehr laden", "loadLess": "Weniger anzeigen", "showLess": "Weniger anzeigen",
-    "details": "Details", "available": "VerfÃ¼gbar", "collection": "Kollektion", "units": "Einheiten",
-    "restockingSoon": "Wird bald wieder aufgestockt.", "checkBackLater": "Bitte schauen Sie spÃ¤ter vorbei oder erkunden Sie andere Kategorien.",
+    "continueShopping": "Weiter einkaufen", "loading": "Laden...", "noProducts": "Keine Produkte verfügbar",
+    "inStock": "Auf Lager", "outOfStock": "Nicht verfügbar", "unavailable": "Nicht verfügbar", "reviews": "Bewertungen",
+    "resetSelection": "Auswahl zurücksetzen", "basedOn": "Basierend auf", "loadMore": "Mehr laden", "loadLess": "Weniger anzeigen", "showLess": "Weniger anzeigen",
+    "details": "Details", "available": "Verfügbar", "collection": "Kollektion", "units": "Einheiten",
+    "restockingSoon": "Wird bald wieder aufgestockt.", "checkBackLater": "Bitte schauen Sie später vorbei oder erkunden Sie andere Kategorien.",
     "noProductsMatching": "Es tut uns leid, aber es gibt keine Produkte, die", "criteria": "Kriterien entsprechen."
   },
-  "header": { "regionCurrency": "Region & WÃ¤hrung", "pricesAdjust": "Preise und Zahlungsmethoden passen sich der ausgewÃ¤hlten Region an." },
+  "header": { "regionCurrency": "Region & Währung", "pricesAdjust": "Preise und Zahlungsmethoden passen sich der ausgewählten Region an." },
   "home": {
-    "popularCategories": "Beliebte Kategorien", "itemsAvailable": "Artikel verfÃ¼gbar", "shopByBrands": "Nach Marke einkaufen",
-    "bannerTitle": "Bis zu 50% Rabatt auf\nausgewÃ¤hlte Artikel", "bannerCta": "Jetzt kaufen",
-    "freeDelivery": "Kostenloser Versand", "freeDeliveryDesc": "Gratis Versand ab â‚¬100",
-    "freeReturn": "Kostenlose RÃ¼cksendung", "freeReturnDesc": "Gratis Versand ab â‚¬100",
+    "popularCategories": "Beliebte Kategorien", "itemsAvailable": "Artikel verfügbar", "shopByBrands": "Nach Marke einkaufen",
+    "bannerTitle": "Bis zu 50% Rabatt auf\nausgewählte Artikel", "bannerCta": "Jetzt kaufen",
+    "freeDelivery": "Kostenloser Versand", "freeDeliveryDesc": "Gratis Versand ab €100",
+    "freeReturn": "Kostenlose Rücksendung", "freeReturnDesc": "Gratis Versand ab €100",
     "customerSupport": "Kundensupport", "customerSupportDesc": "Freundlicher 24/7 Support",
-    "moneyBack": "Geld-zurÃ¼ck-Garantie", "moneyBackDesc": "QualitÃ¤t geprÃ¼ft von unserem Team",
-    "latestBlog": "Neueste BeitrÃ¤ge", "productLoading": "Produkte werden geladen..."
+    "moneyBack": "Geld-zurück-Garantie", "moneyBackDesc": "Qualität geprüft von unserem Team",
+    "latestBlog": "Neueste Beiträge", "productLoading": "Produkte werden geladen..."
   },
-  "shop": { "title": "Finde die Produkte, die du brauchst", "resetFilters": "Filter zurÃ¼cksetzen", "productCategories": "Produktkategorien", "brands": "Marken", "price": "Preis", "productLoading": "Produkte werden geladen..." },
+  "shop": { "title": "Finde die Produkte, die du brauchst", "resetFilters": "Filter zurücksetzen", "productCategories": "Produktkategorien", "brands": "Marken", "price": "Preis", "productLoading": "Produkte werden geladen..." },
   "product": {
-    "addToCart": "In den Warenkorb", "inStock": "Auf Lager", "outOfStock": "Nicht verfÃ¼gbar", "reviews": "Bewertungen",
-    "description": "Beschreibung", "additionalInfo": "ZusÃ¤tzliche Informationen", "reviewsTab": "Bewertungen",
+    "addToCart": "In den Warenkorb", "inStock": "Auf Lager", "outOfStock": "Nicht verfügbar", "reviews": "Bewertungen",
+    "description": "Beschreibung", "additionalInfo": "Zusätzliche Informationen", "reviewsTab": "Bewertungen",
     "characteristics": "Eigenschaften", "brand": "Marke", "collection": "Kollektion", "type": "Typ",
     "stock": "Bestand", "sku": "SKU", "category": "Kategorie", "variant": "Variante", "status": "Status",
-    "noDescription": "Keine Beschreibung fÃ¼r dieses Produkt verfÃ¼gbar.",
-    "freeDelivery": "Kostenloser Versand", "freeDeliveryDesc": "PLZ eingeben, um Lieferoptionen zu prÃ¼fen",
-    "returnDelivery": "RÃ¼cksendung", "returnDeliveryDesc": "Kostenlose RÃ¼cksendung innerhalb von 30 Tagen.",
-    "compareColor": "Farbe vergleichen", "askQuestion": "Frage stellen", "deliveryReturn": "Lieferung & RÃ¼ckgabe", "share": "Teilen",
+    "noDescription": "Keine Beschreibung für dieses Produkt verfügbar.",
+    "freeDelivery": "Kostenloser Versand", "freeDeliveryDesc": "PLZ eingeben, um Lieferoptionen zu prüfen",
+    "returnDelivery": "Rücksendung", "returnDeliveryDesc": "Kostenlose Rücksendung innerhalb von 30 Tagen.",
+    "compareColor": "Farbe vergleichen", "askQuestion": "Frage stellen", "deliveryReturn": "Lieferung & Rückgabe", "share": "Teilen",
     "loadMoreReviews": "Mehr Bewertungen laden", "remaining": "verbleibend", "showLessReviews": "Weniger anzeigen",
     "basedOn": "Basierend auf", "quantity": "Menge", "subtotal": "Zwischensumme",
     "details": "Details"
   },
   "cart": {
-    "title": "Warenkorb", "selectAll": "Alle auswÃ¤hlen", "selected": "ausgewÃ¤hlt", "orderSummary": "BestellÃ¼bersicht",
-    "deliveryAddresses": "Lieferadressen", "addNewAddress": "Adresse hinzufÃ¼gen", "resetCart": "Warenkorb leeren",
-    "reselectAll": "Alle erneut auswÃ¤hlen", "processing": "Wird verarbeitet...", "selectItemsCheckout": "Artikel zum Checkout auswÃ¤hlen",
+    "title": "Warenkorb", "selectAll": "Alle auswählen", "selected": "ausgewählt", "orderSummary": "Bestellübersicht",
+    "deliveryAddresses": "Lieferadressen", "addNewAddress": "Adresse hinzufügen", "resetCart": "Warenkorb leeren",
+    "reselectAll": "Alle erneut auswählen", "processing": "Wird verarbeitet...", "selectItemsCheckout": "Artikel zum Checkout auswählen",
     "checkout": "Zur Kasse", "variantLabel": "Variante", "statusLabel": "Status", "removeItem": "Entfernen",
-    "removeFromCart": "Aus dem Warenkorb entfernen", "confirmResetCart": "MÃ¶chten Sie den Warenkorb wirklich leeren? Diese Aktion kann nicht rÃ¼ckgÃ¤ngig gemacht werden.",
+    "removeFromCart": "Aus dem Warenkorb entfernen", "confirmResetCart": "Möchten Sie den Warenkorb wirklich leeren? Diese Aktion kann nicht rückgängig gemacht werden.",
     "productRemovedToast": "Produkt entfernt", "total": "Gesamt", "discount": "Rabatt", "subtotal": "Zwischensumme",
     "details": "Details",
     "empty": "Warenkorb ist leer", "emptyDesc": "Ihr Warenkorb ist leer. Beginnen Sie mit dem Einkaufen!",
-    "quantityDecreased": "Menge erfolgreich verringert!", "quantityIncreased": "Menge erfolgreich erhÃ¶ht!", "cantAddMore": "Kann nicht mehr als verfÃ¼gbaren Bestand hinzufÃ¼gen!"
+    "quantityDecreased": "Menge erfolgreich verringert!", "quantityIncreased": "Menge erfolgreich erhöht!", "cantAddMore": "Kann nicht mehr als verfügbaren Bestand hinzufügen!"
   },
   "wishlist": {
-    "empty": "Ihre Wunschliste ist leer", "emptyDesc": "Zur Wunschliste hinzugefÃ¼gte Artikel erscheinen hier",
+    "empty": "Ihre Wunschliste ist leer", "emptyDesc": "Zur Wunschliste hinzugefügte Artikel erscheinen hier",
     "product": "Produkt", "category": "Kategorie", "type": "Typ", "status": "Status", "price": "Preis", "action": "Aktion",
-    "reset": "Wunschliste leeren", "resetConfirm": "MÃ¶chten Sie die Wunschliste wirklich leeren?",
+    "reset": "Wunschliste leeren", "resetConfirm": "Möchten Sie die Wunschliste wirklich leeren?",
     "resetSuccess": "Wunschliste erfolgreich geleert!", "itemRemoved": "Artikel aus Wunschliste entfernt",
     "noAccess": "Melden Sie sich an, um Ihre Wunschliste anzuzeigen."
   },
   "orders": {
     "title": "Bestellliste", "orderNumber": "Bestellnummer", "date": "Datum", "customer": "Kunde",
     "email": "E-Mail", "total": "Gesamt", "status": "Status", "invoiceNumber": "Rechnungsnummer",
-    "clickDetails": "Klicken fÃ¼r Bestelldetails", "noOrders": "Keine Bestellungen gefunden",
+    "clickDetails": "Klicken für Bestelldetails", "noOrders": "Keine Bestellungen gefunden",
     "noOrdersText": "Es scheint, dass Sie noch keine Bestellungen aufgegeben haben. Fangen Sie an zu shoppen!",
     "details": "Bestelldetails", "product": "Produkt", "quantity": "Menge", "price": "Preis",
     "discount": "Rabatt", "subtotal": "Zwischensumme",
-    "details": "Details", "downloadInvoice": "Rechnung herunterladen", "deleteAdminOnly": "LÃ¶schen nur fÃ¼r Admin"
+    "downloadInvoice": "Rechnung herunterladen", "deleteAdminOnly": "Löschen nur für Admin"
   },
-  "blog": { "title": "Blog", "categories": "Blog-Kategorien", "latest": "Neueste BeitrÃ¤ge", "backTo": "ZurÃ¼ck zum Blog" },
+  "blog": { "title": "Blog", "categories": "Blog-Kategorien", "latest": "Neueste Beiträge", "backTo": "Zurück zum Blog" },
   "footer": {
     "quickLinks": "Schnelllinks", "categories": "Kategorien", "newsletter": "Newsletter",
-    "newsletterText": "Abonnieren Sie unseren Newsletter, um Ã¼ber die neuesten Nachrichten und Angebote informiert zu bleiben.",
+    "newsletterText": "Abonnieren Sie unseren Newsletter, um über die neuesten Nachrichten und Angebote informiert zu bleiben.",
     "emailPlaceholder": "E-Mail eingeben", "subscribe": "Abonnieren", "allRights": "Alle Rechte vorbehalten.",
     "visit": "Besuchen Sie uns", "visitDesc": "Berlin, Deutschland", "call": "Rufen Sie uns an",
-    "hours": "Ã–ffnungszeiten", "hoursDesc": "Mo â€“ Fr: 9 â€“ 18 Uhr", "emailUs": "E-Mail schreiben"
+    "hours": "Öffnungszeiten", "hoursDesc": "Mo – Fr: 9 – 18 Uhr", "emailUs": "E-Mail schreiben"
   },
   "auth": { "noAccess": "Melden Sie sich an, um diesen Inhalt anzuzeigen.", "signIn": "Anmelden", "signUp": "Registrieren" },
   "success": {
-    "title": "Bestellung bestÃ¤tigt!", "thankYou": "Vielen Dank, {name}! ðŸŽ‰", "thankYouGuest": "Vielen Dank fÃ¼r Ihren Kauf! ðŸŽ‰",
-    "processingOrder": "Wir bearbeiten Ihre Bestellung und versenden sie bald. Eine BestÃ¤tigungs-E-Mail wird in KÃ¼rze zugesandt.",
+    "title": "Bestellung bestätigt!", "thankYou": "Vielen Dank, {name}! 🎉", "thankYouGuest": "Vielen Dank für Ihren Kauf! 🎉",
+    "processingOrder": "Wir bearbeiten Ihre Bestellung und versenden sie bald. Eine Bestätigungs-E-Mail wird in Kürze zugesandt.",
     "orderNumber": "Bestellnummer", "home": "Start", "myOrders": "Meine Bestellungen", "keepShopping": "Weiter einkaufen"
   },
-  "favorite": { "added": "Produkt erfolgreich hinzugefÃ¼gt!", "removed": "Produkt erfolgreich entfernt!" },
-  "pages": { "aboutTitle": "Ãœber uns", "contactTitle": "Kontakt", "privacyTitle": "DatenschutzerklÃ¤rung", "termsTitle": "AGB", "faqTitle": "FAQ", "helpTitle": "Hilfe" },
+  "favorite": { "added": "Produkt erfolgreich hinzugefügt!", "removed": "Produkt erfolgreich entfernt!" },
+  "pages": { "aboutTitle": "Über uns", "contactTitle": "Kontakt", "privacyTitle": "Datenschutzerklärung", "termsTitle": "AGB", "faqTitle": "FAQ", "helpTitle": "Hilfe" },
   "deals": { "title": "Angebote der Woche" }
 }
-
