@@ -1,59 +1,50 @@
+"use client";
 import { cn } from "@/lib/utils";
 import { Product } from "@/sanity.types";
 import { Minus, Plus } from "lucide-react";
-import { toast } from "react-hot-toast";
+import { useTranslations } from "next-intl";
+import toast from "react-hot-toast";
 import useStore from "../../store";
 import { Button } from "./ui/button";
 
-interface Props {
-  product: Product;
-  className?: string;
-}
-const QuantityButtons = ({ product, className }: Props) => {
+const QuantityButtons = ({ product, className }: { product: Product; className?: string }) => {
+  const t = useTranslations("cart");
   const { addItem, removeItem, getItemCount } = useStore();
   const itemCount = getItemCount(product?._id);
   const isOutOfStock = product?.stock === 0;
 
-  const handleRemoveProduct = () => {
+  const handleRemove = () => {
     removeItem(product?._id);
-    if (itemCount > 1) {
-      toast.success("Quantity Decreased successfully!");
-    } else {
-      toast.success(
-        `${product?.name?.substring(0, 12)}... removed successfully!`,
-      );
-    }
+    toast.success(itemCount > 1 ? t("quantityDecreased") : t("productRemovedToast"));
   };
 
-  const handleAddToCart = () => {
+  const handleAdd = () => {
     if ((product?.stock as number) > itemCount) {
       addItem(product);
-      toast.success("Quantity Increased successfully!");
+      toast.success(t("quantityIncreased"));
     } else {
-      toast.error("Can not add more than available stock!");
+      toast.error(t("cantAddMore"));
     }
   };
 
   return (
     <div className={cn("flex items-center gap-1 pb-1 text-base", className)}>
       <Button
-        onClick={handleRemoveProduct}
+        onClick={handleRemove}
         variant="outline"
         size="icon"
         disabled={itemCount === 0 || isOutOfStock}
-        className="w-6 h-6 border-[1px] hover:bg-shop-dark_green/20 hoverEffect"
+        className="w-6 h-6 border-[1px] hover:bg-primary/10 hoverEffect"
       >
         <Minus />
       </Button>
-      <span className="font-semibold text-sm w-6 text-center text-darkColor">
-        {itemCount}
-      </span>
+      <span className="font-semibold text-sm w-6 text-center text-text-primary">{itemCount}</span>
       <Button
-        onClick={handleAddToCart}
+        onClick={handleAdd}
         variant="outline"
         size="icon"
         disabled={isOutOfStock}
-        className="w-6 h-6 border-[1px] hover:bg-shop-dark_green/20 hoverEffect"
+        className="w-6 h-6 border-[1px] hover:bg-primary/10 hoverEffect"
       >
         <Plus />
       </Button>

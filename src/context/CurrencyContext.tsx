@@ -28,7 +28,8 @@ interface CurrencyContextValue {
 const CurrencyContext = createContext<CurrencyContextValue | null>(null);
 
 export function CurrencyProvider({ children }: { children: ReactNode }) {
-  const [currency, setCurrencyState] = useState<SupportedCurrency>("usd");
+  // Default to BRL (Portuguese-BR). The saved preference from localStorage overrides after hydration.
+  const [currency, setCurrencyState] = useState<SupportedCurrency>("brl");
   const [rates, setRates] = useState(EXCHANGE_RATES);
 
   useEffect(() => {

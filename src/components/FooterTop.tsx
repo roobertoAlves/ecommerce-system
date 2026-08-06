@@ -1,57 +1,32 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
 
-interface ContactItemData {
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-}
-
-const data: ContactItemData[] = [
-  {
-    title: "Visit Us",
-    description: "Sao Paulo, Brazil",
-    icon: (
-      <MapPin className="h-6 w-6 text-text-muted group-hover:text-primary transition-colors" />
-    ),
-  },
-  {
-    title: "Call Us",
-    description: "+55 11 99999-9999",
-    icon: (
-      <Phone className="h-6 w-6 text-text-muted group-hover:text-primary transition-colors" />
-    ),
-  },
-  {
-    title: "Working Hours",
-    description: "Mon - Fri: 9:00 AM - 6:00 PM",
-    icon: (
-      <Clock className="h-6 w-6 text-text-muted group-hover:text-primary transition-colors" />
-    ),
-  },
-  {
-    title: "Email Us",
-    description: "contact@onlineshopping.com",
-    icon: (
-      <Mail className="h-6 w-6 text-text-muted group-hover:text-primary transition-colors" />
-    ),
-  },
-];
-
 const FooterTop = () => {
+  const t = useTranslations("footer");
+
+  const items = [
+    { key: "visit" as const, descKey: "visitDesc" as const, Icon: MapPin },
+    { key: "call" as const, descKey: null, Icon: Phone, desc: "+55 11 99999-9999" },
+    { key: "hours" as const, descKey: "hoursDesc" as const, Icon: Clock },
+    { key: "emailUs" as const, descKey: null, Icon: Mail, desc: "contact@shopify.com" },
+  ];
+
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 border-b border-border py-2">
-      {data?.map((item, index) => (
+      {items.map(({ key, descKey, Icon, desc }) => (
         <div
-          key={index}
+          key={key}
           className="flex items-center gap-3 group hover:bg-bg-secondary p-4 rounded-xl transition-colors duration-300"
         >
-          {item?.icon}
+          <Icon className="h-6 w-6 text-text-muted group-hover:text-primary transition-colors shrink-0" />
           <div>
-            <h3 className="font-semibold text-text-primary text-sm group-hover:text-primary transition-colors duration-300 font-poppins">
-              {item?.title}
+            <h3 className="font-semibold text-text-primary text-sm group-hover:text-primary transition-colors font-poppins">
+              {t(key)}
             </h3>
             <p className="text-text-muted text-xs mt-0.5 font-poppins">
-              {item?.description}
+              {descKey ? t(descKey) : desc}
             </p>
           </div>
         </div>

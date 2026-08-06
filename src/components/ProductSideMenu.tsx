@@ -2,36 +2,26 @@
 import { cn } from "@/lib/utils";
 import { Product } from "@/sanity.types";
 import { Heart } from "lucide-react";
-
+import { useTranslations } from "next-intl";
 import toast from "react-hot-toast";
 import useStore from "../../store";
 
-const ProductSideMenu = ({
-  product,
-  className,
-}: {
-  product: Product;
-  className?: string;
-}) => {
+const ProductSideMenu = ({ product, className }: { product: Product; className?: string }) => {
+  const t = useTranslations("favorite");
   const { favoriteProduct, addToFavorite } = useStore();
   const existingProduct = favoriteProduct?.find((item) => item?._id === product?._id) ?? null;
 
-  const handleFavorite = (e: React.MouseEvent<HTMLSpanElement>) => {
+  const handleFavorite = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
     if (product?._id) {
       addToFavorite(product).then(() => {
-        toast.success(
-          existingProduct
-            ? "Product removed successfully!"
-            : "Product added successfully!",
-        );
+        toast.success(existingProduct ? t("removed") : t("added"));
       });
     }
   };
+
   return (
-    <div
-      className={cn("absolute top-2 right-2 hover:cursor-pointer", className)}
-    >
+    <div className={cn("absolute top-2 right-2 hover:cursor-pointer", className)}>
       <div
         onClick={handleFavorite}
         className={`p-2.5 rounded-full hoverEffect ${

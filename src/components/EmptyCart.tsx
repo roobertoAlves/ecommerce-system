@@ -1,13 +1,16 @@
 "use client";
 import { emptyCart } from "@/app/images";
+import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function EmptyCart() {
+  const t = useTranslations("cart");
+  const tCommon = useTranslations("common");
   return (
-    <div className="py-10 md:py-20 bg-linear-to-b from-bg-secondary to-surface flex items-center justify-center p-4">
+    <div className="py-10 md:py-20 flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -15,58 +18,29 @@ export default function EmptyCart() {
         className="bg-surface rounded-2xl shadow-xl p-8 max-w-md w-full space-y-8 border border-border"
       >
         <motion.div
-          animate={{
-            scale: [1, 1.1, 1],
-            rotate: [0, 5, -5, 0],
-          }}
-          transition={{
-            repeat: Infinity,
-            duration: 5,
-            ease: "easeInOut",
-          }}
+          animate={{ scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] }}
+          transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }}
           className="relative w-48 h-48 mx-auto"
         >
-          <Image
-            src={emptyCart}
-            alt="Empty shopping cart"
-            layout="fill"
-            objectFit="contain"
-            className="drop-shadow-lg"
-          />
+          <Image src={emptyCart} alt="Empty cart" fill className="object-contain drop-shadow-lg" />
           <motion.div
-            animate={{
-              x: [0, -10, 10, 0],
-              y: [0, -5, 5, 0],
-            }}
-            transition={{
-              repeat: Infinity,
-              duration: 3,
-              ease: "linear",
-            }}
+            animate={{ x: [0, -10, 10, 0], y: [0, -5, 5, 0] }}
+            transition={{ repeat: Infinity, duration: 3, ease: "linear" }}
             className="absolute -top-4 -right-4 bg-primary rounded-full p-2"
           >
             <ShoppingCart size={24} className="text-primary-foreground" />
           </motion.div>
         </motion.div>
-
         <div className="text-center space-y-4">
-          <h2 className="text-3xl font-bold text-text-primary">
-            Your cart is feeling lonely
-          </h2>
-          <p className="text-text-muted">
-            It looks like you haven&apos;t added anything to your cart yet.
-            Let&apos;s change that and find some amazing products for you!
-          </p>
+          <h2 className="text-3xl font-bold text-text-primary">{t("empty")}</h2>
+          <p className="text-text-muted">{tCommon("noProducts")}</p>
         </div>
-
-        <div>
-          <Link
-            href="/"
-            className="block bg-btn-primary/10 border border-border text-center py-2.5 rounded-full text-sm font-semibold tracking-wide hover:border-btn-primary hover:bg-btn-primary hover:text-primary-foreground hoverEffect"
-          >
-            Discover Products
-          </Link>
-        </div>
+        <Link
+          href="/"
+          className="block bg-btn-primary/10 border border-border text-center py-2.5 rounded-full text-sm font-semibold tracking-wide hover:border-btn-primary hover:bg-btn-primary hover:text-primary-foreground hoverEffect"
+        >
+          {tCommon("browseProducts")}
+        </Link>
       </motion.div>
     </div>
   );

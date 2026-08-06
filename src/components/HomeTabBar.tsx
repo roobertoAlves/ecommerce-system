@@ -1,4 +1,6 @@
+"use client";
 import { productType } from "@/constants/data";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 
 interface Props {
@@ -7,26 +9,32 @@ interface Props {
 }
 
 const HomeTabBar = ({ selectedTab, onTabSelect }: Props) => {
+  const t = useTranslations("common");
+
   return (
     <div className="flex items-center justify-between flex-wrap gap-5">
       <div className="flex items-center gap-3 text-sm font-semibold">
-        {productType?.map((item) => (
+        {productType.map((item) => (
           <button
-            key={item?.title}
-            onClick={() => onTabSelect(item?.value)}
+            key={item.value}
+            onClick={() => onTabSelect(item.value)}
             className={`border px-4 py-1.5 md:px-6 md:py-2 rounded-full transition-all duration-300
                 hover:bg-btn-primary hover:border-btn-primary hover:text-primary-foreground
-                ${selectedTab === item?.value ? "bg-btn-primary text-primary-foreground border-btn-primary" : "bg-surface text-text-primary border-border"}`}
+                ${selectedTab === item.value
+                  ? "bg-btn-primary text-primary-foreground border-btn-primary"
+                  : "bg-surface text-text-primary border-border"
+                }`}
           >
-            {item?.title}
+            {/* Tab titles are fixed design tokens — not translated */}
+            {item.title}
           </button>
         ))}
       </div>
       <Link
-        href={"/shop"}
+        href="/shop"
         className="text-sm font-semibold text-text-secondary hover:text-btn-primary transition-colors duration-300"
       >
-        See All
+        {t("seeAll")}
       </Link>
     </div>
   );

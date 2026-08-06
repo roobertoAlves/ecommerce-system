@@ -1,8 +1,8 @@
 "use client";
-
 import { useUser } from "@clerk/nextjs";
 import { CheckCircle2, Home, Package, ShoppingBag, Sparkles } from "lucide-react";
 import { motion } from "motion/react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
@@ -10,14 +10,17 @@ import useStore from "../../../../store";
 
 const SuccessPage = () => {
   const { user } = useUser();
+  const t = useTranslations("success");
   const { resetCart } = useStore();
   const searchParams = useSearchParams();
   const session_id = searchParams.get("session_id");
   const orderNumber = searchParams.get("orderNumber");
 
-  useEffect(() => {
-    if (session_id) resetCart();
-  }, [resetCart, session_id]);
+  useEffect(() => { if (session_id) resetCart(); }, [resetCart, session_id]);
+
+  const thankYouMsg = user?.firstName
+    ? t("thankYou", { name: user.firstName })
+    : t("thankYouGuest");
 
   return (
     <div className="min-h-[80vh] bg-bg flex items-center justify-center px-4 py-12">
@@ -66,18 +69,13 @@ const SuccessPage = () => {
         <motion.h1
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.35, duration: 0.45 }}
+          transition={{ delay: 0.35 }}
           className="text-3xl md:text-4xl font-bold text-text-primary mb-2"
         >
-          Order Confirmed!
+          {t("title")}
         </motion.h1>
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.45 }}
-          className="text-text-muted text-sm mb-6"
-        >
-          {user?.firstName ? `Thank you, ${user.firstName}! 🎉` : "Thank you for your purchase! 🎉"}
+        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.45 }} className="text-text-muted text-sm mb-6">
+          {thankYouMsg}
         </motion.p>
 
         <motion.div
@@ -86,41 +84,23 @@ const SuccessPage = () => {
           transition={{ delay: 0.5 }}
           className="bg-bg-secondary border border-border rounded-xl p-4 mb-8 text-left space-y-3"
         >
-          <p className="text-sm text-text-muted leading-relaxed">
-            We&apos;re processing your order and will ship it soon. A confirmation email will be sent to your inbox shortly.
-          </p>
+          <p className="text-sm text-text-muted leading-relaxed">{t("processingOrder")}</p>
           <div className="h-px bg-border" />
           <div className="flex items-center justify-between">
-            <span className="text-sm text-text-muted">Order Number</span>
-            <span className="text-sm font-bold text-primary font-mono tracking-wider">
-              {orderNumber ?? "—"}
-            </span>
+            <span className="text-sm text-text-muted">{t("orderNumber")}</span>
+            <span className="text-sm font-bold text-primary font-mono tracking-wider">{orderNumber ?? "—"}</span>
           </div>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className="grid grid-cols-1 sm:grid-cols-3 gap-3"
-        >
-          <Link
-            href="/"
-            className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold text-sm bg-primary text-primary-foreground hover:bg-primary-dark transition-colors duration-200 shadow-md shadow-primary/20"
-          >
-            <Home className="w-4 h-4" /> Home
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <Link href="/" className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold text-sm bg-primary text-primary-foreground hover:bg-primary-dark transition-colors shadow-md shadow-primary/20">
+            <Home className="w-4 h-4" /> {t("home")}
           </Link>
-          <Link
-            href="/orders"
-            className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold text-sm bg-bg-secondary text-text-primary border border-border hover:bg-primary/10 hover:border-primary/40 transition-colors duration-200"
-          >
-            <Package className="w-4 h-4" /> My Orders
+          <Link href="/orders" className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold text-sm bg-bg-secondary text-text-primary border border-border hover:bg-primary/10 hover:border-primary/40 transition-colors">
+            <Package className="w-4 h-4" /> {t("myOrders")}
           </Link>
-          <Link
-            href="/shop"
-            className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold text-sm bg-accent text-white hover:bg-primary transition-colors duration-200 shadow-md shadow-accent/20"
-          >
-            <ShoppingBag className="w-4 h-4" /> Keep Shopping
+          <Link href="/shop" className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold text-sm bg-accent text-white hover:bg-primary transition-colors shadow-md shadow-accent/20">
+            <ShoppingBag className="w-4 h-4" /> {t("keepShopping")}
           </Link>
         </motion.div>
       </motion.div>

@@ -1,10 +1,10 @@
 "use client";
 import { Product } from "@/sanity.types";
-import useStore from "../../store";
 import { Heart } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
-import React from "react";
 import toast from "react-hot-toast";
+import useStore from "../../store";
 
 const FavoriteButton = ({
   showProduct = false,
@@ -13,46 +13,44 @@ const FavoriteButton = ({
   showProduct?: boolean;
   product?: Product | null | undefined;
 }) => {
+  const t = useTranslations("favorite");
   const { favoriteProduct, addToFavorite } = useStore();
-  const existingProduct =
-    favoriteProduct.find((item: Product) => item?._id === product?._id) ?? null;
+  const existingProduct = favoriteProduct.find((item: Product) => item?._id === product?._id) ?? null;
 
   const handleFavorite = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (product?._id) {
       addToFavorite(product).then(() => {
-        toast.success(
-          existingProduct ? "Product removed successfully!" : "Product added successfully!",
-        );
+        toast.success(existingProduct ? t("removed") : t("added"));
       });
     }
   };
 
+  if (showProduct) {
+    return (
+      <button
+        onClick={handleFavorite}
+        className={`p-3 rounded-full border transition-colors duration-200 ${
+          existingProduct
+            ? "bg-primary border-primary text-primary-foreground"
+            : "border-border text-text-muted hover:border-primary hover:text-primary"
+        }`}
+        aria-label={existingProduct ? t("removed") : t("added")}
+      >
+        <Heart size={18} fill={existingProduct ? "currentColor" : "none"} />
+      </button>
+    );
+  }
+
   return (
-    <>
-      {!showProduct ? (
-        <Link href={"/wishlist"} className="group relative">
-          <Heart className="w-6 h-6 text-text-muted group-hover:text-primary hoverEffect" />
-          <span className="absolute -top-1.5 -right-1.5 bg-primary text-primary-foreground min-w-[18px] h-[18px] rounded-full text-[10px] font-bold flex items-center justify-center px-0.5">
-            {favoriteProduct?.length ?? 0}
-          </span>
-        </Link>
-      ) : (
-        <button
-          onClick={handleFavorite}
-          className="group relative hover:text-primary hoverEffect border border-primary/40 hover:border-primary p-1.5 rounded-sm"
-        >
-          {existingProduct ? (
-            <Heart
-              fill="currentColor"
-              className="text-primary hoverEffect w-5 h-5"
-            />
-          ) : (
-            <Heart className="text-primary/60 group-hover:text-primary hoverEffect w-5 h-5" />
-          )}
-        </button>
+    <Link href="/wishlist" className="group relative">
+      <Heart className="w-6 h-6 text-text-muted group-hover:text-primary hoverEffect" />
+      {favoriteProduct.length > 0 && (
+        <span className="absolute -top-1.5 -right-1.5 bg-primary text-primary-foreground min-w-[18px] h-[18px] rounded-full text-[10px] font-bold flex items-center justify-center px-0.5">
+          {favoriteProduct.length}
+        </span>
       )}
-    </>
+    </Link>
   );
 };
 

@@ -1,4 +1,6 @@
+"use client";
 import { Check } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Title from "../Title";
 
 const priceArray = [
@@ -15,6 +17,9 @@ interface Props {
 }
 
 const PriceList = ({ selectedPrices, setSelectedPrices }: Props) => {
+  const t = useTranslations("shop");
+  const tCommon = useTranslations("common");
+
   const toggle = (value: string) =>
     setSelectedPrices((prev) =>
       prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value],
@@ -22,26 +27,16 @@ const PriceList = ({ selectedPrices, setSelectedPrices }: Props) => {
 
   return (
     <div className="w-full p-5">
-      <Title className="text-base font-black text-text-primary">Price</Title>
+      <Title className="text-base font-black text-text-primary">{t("price")}</Title>
       <div className="mt-2 space-y-1">
         {priceArray.map((price) => {
           const isSelected = selectedPrices.includes(price.value);
           return (
-            <div
-              key={price.value}
-              onClick={() => toggle(price.value)}
-              className="flex items-center space-x-2 cursor-pointer group"
-            >
-              <span
-                className={`w-4 h-4 rounded-sm border shrink-0 flex items-center justify-center transition-colors ${isSelected ? "bg-primary border-primary" : "border-border group-hover:border-primary"}`}
-              >
-                {isSelected && (
-                  <Check size={11} className="text-white" strokeWidth={3} />
-                )}
+            <div key={price.value} onClick={() => toggle(price.value)} className="flex items-center space-x-2 cursor-pointer group">
+              <span className={`w-4 h-4 rounded-sm border shrink-0 flex items-center justify-center transition-colors ${isSelected ? "bg-primary border-primary" : "border-border group-hover:border-primary"}`}>
+                {isSelected && <Check size={11} className="text-white" strokeWidth={3} />}
               </span>
-              <span
-                className={`text-sm ${isSelected ? "font-semibold text-primary" : "font-normal text-text-primary"}`}
-              >
+              <span className={`text-sm ${isSelected ? "font-semibold text-primary" : "font-normal text-text-primary"}`}>
                 {price.title}
               </span>
             </div>
@@ -52,7 +47,7 @@ const PriceList = ({ selectedPrices, setSelectedPrices }: Props) => {
             onClick={() => setSelectedPrices([])}
             className="text-sm font-medium mt-2 underline underline-offset-2 decoration-1 text-text-primary hover:text-primary hoverEffect text-left"
           >
-            Reset Selection
+            {tCommon("resetSelection")}
           </button>
         )}
       </div>

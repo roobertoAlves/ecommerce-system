@@ -2,6 +2,7 @@
 import { headerData } from "@/constants/data";
 import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Logo from "./Logo";
@@ -14,13 +15,10 @@ interface SideBarProps {
 
 const SideMenu: React.FC<SideBarProps> = ({ isOpen, onClose }) => {
   const pathname = usePathname();
+  const t = useTranslations("nav");
+
   return (
-    <div
-      className={cn(
-        "fixed inset-0 z-50 transition-all duration-300",
-        isOpen ? "visible" : "invisible",
-      )}
-    >
+    <div className={cn("fixed inset-0 z-50 transition-all duration-300", isOpen ? "visible" : "invisible")}>
       <div
         className={cn(
           "absolute inset-0 bg-black/50 transition-opacity duration-300 -z-10",
@@ -36,25 +34,22 @@ const SideMenu: React.FC<SideBarProps> = ({ isOpen, onClose }) => {
       >
         <div className="flex items-center justify-between gap-5">
           <Logo />
-          <button
-            onClick={onClose}
-            className="text-text-muted hover:text-primary transition-colors duration-300"
-          >
+          <button onClick={onClose} className="text-text-muted hover:text-primary transition-colors">
             <X />
           </button>
         </div>
         <div className="flex flex-col space-y-3.5 font-semibold tracking-wide">
-          {headerData?.map((item) => (
+          {headerData.map((item) => (
             <Link
-              href={item?.href}
-              key={item?.title}
+              href={item.href}
+              key={item.href}
               onClick={onClose}
               className={cn(
                 "hover:text-primary transition-colors duration-300",
-                pathname === item?.href ? "text-primary font-semibold" : "text-text-muted",
+                pathname === item.href ? "text-primary font-semibold" : "text-text-muted",
               )}
             >
-              {item?.title}
+              {t(item.key)}
             </Link>
           ))}
         </div>

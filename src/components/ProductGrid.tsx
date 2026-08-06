@@ -6,6 +6,7 @@ import { client } from "@/sanity/lib/client";
 import { Loader2 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { groq } from "next-sanity";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import Container from "./Container";
 import HomeTabbar from "./HomeTabBar";
@@ -17,16 +18,14 @@ const query = groq`*[
     $tab == "all" ||
     count((categories[]->slug.current)[@ in $categorySlugs]) > 0
   )
-] | order(name asc) {
-  ...,"categories": categories[]->title
-}`;
+] | order(name asc) { ...,"categories": categories[]->title }`;
 
 const ProductGrid = () => {
+  const t = useTranslations("home");
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedTab, setSelectedTab] = useState(productType[0]?.value || "");
-  const selectedTabConfig =
-    productType.find((item) => item.value === selectedTab) ?? productType[0];
+  const selectedTabConfig = productType.find((item) => item.value === selectedTab) ?? productType[0];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,11 +36,8 @@ const ProductGrid = () => {
           categorySlugs: selectedTabConfig?.categorySlugs ?? [],
         } as Record<string, unknown>);
         setProducts(response);
-      } catch (error) {
-        console.log("Product fetching Error", error);
-      } finally {
-        setLoading(false);
-      }
+      } catch (error) { console.error("Product fetching error:", error); }
+      finally { setLoading(false); }
     };
     fetchData();
   }, [selectedTab, selectedTabConfig]);
@@ -53,20 +49,15 @@ const ProductGrid = () => {
         <div className="flex flex-col items-center justify-center py-10 min-h-80 space-y-4 text-center bg-bg-secondary rounded-lg w-full mt-10">
           <motion.div className="flex items-center space-x-2 text-primary">
             <Loader2 className="w-5 h-5 animate-spin" />
-            <span>Product is loading...</span>
+            <span>{t("productLoading")}</span>
           </motion.div>
         </div>
       ) : products?.length ? (
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2.5 mt-10">
-          {products?.map((product) => (
-            <AnimatePresence key={product?._id}>
-              <motion.div
-                layout
-                initial={{ opacity: 0.2 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              >
-                <ProductCard key={product?._id} product={product} />
+          {products.map((product) => (
+            <AnimatePresence key={product._id}>
+              <motion.div layout initial={{ opacity: 0.2 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                <ProductCard product={product} />
               </motion.div>
             </AnimatePresence>
           ))}
