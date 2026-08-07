@@ -12,7 +12,7 @@ export const quickLinksData = [
   { title: "Privacy Policy", href: "/privacy-policy" },
   { title: "Terms & Conditions", href: "/terms-conditions" },
   { title: "FAQ", href: "/faq" },
-  { title: "Help", href: "/Help" },
+  { title: "Help", href: "/help" },
 ];
 
 export const categoriesData = [

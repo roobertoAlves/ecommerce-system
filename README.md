@@ -2,6 +2,8 @@
 
 A full-stack ecommerce platform built with Next.js 16, React 19, Sanity CMS, Stripe, and Clerk. The application supports multi-currency pricing, real-time language switching across eight regions, a complete checkout flow, order management, a blog, and a full admin content studio.
 
+**Live demo:** [ecommerce-system-two.vercel.app](https://ecommerce-system-two.vercel.app)
+
 ---
 
 ## Table of Contents
@@ -24,10 +26,10 @@ A full-stack ecommerce platform built with Next.js 16, React 19, Sanity CMS, Str
 |---|---|
 | Framework | Next.js 16 (App Router) |
 | UI | React 19, Tailwind CSS v4, shadcn/ui, Base UI |
-| CMS | Sanity v3 |
+| CMS | Sanity v6 |
 | Authentication | Clerk |
 | Payments | Stripe (Checkout Sessions, Webhooks, Invoices) |
-| Internationalisation | next-intl 3 |
+| Internationalisation | next-intl 4 |
 | State management | Zustand |
 | Animations | Motion (Framer Motion v12) |
 | Language | TypeScript 5 |
@@ -225,7 +227,7 @@ Create a `.env.local` file at the project root with the following variables. Do 
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
 CLERK_SECRET_KEY=
 
-# Application base URL
+# Application base URL — use http://localhost:3000 locally, full domain in production
 NEXT_PUBLIC_BASE_URL=http://localhost:3000
 
 # Sanity CMS
@@ -243,7 +245,7 @@ STRIPE_WEBHOOK_SECRET=
 EXCHANGE_RATE_API_KEY=
 ```
 
----
+> **Note:** The address lookup uses [ViaCEP](https://viacep.com.br/) which is a free public API. No API key is required.
 
 ## Getting Started
 

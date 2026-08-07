@@ -4,9 +4,16 @@ import { defineField, defineType } from "sanity";
 export const addressType = defineType({
   name: "address",
   title: "Address",
-  type: "object",
+  type: "document",
   icon: HomeIcon,
   fields: [
+    defineField({
+      name: "clerkUserId",
+      title: "Clerk User ID",
+      type: "string",
+      description: "The Clerk user ID this address belongs to.",
+      validation: (Rule) => Rule.required(),
+    }),
     defineField({
       name: "name",
       title: "Addressee Name",
@@ -45,23 +52,15 @@ export const addressType = defineType({
       name: "state",
       title: "State",
       type: "string",
-      description: "Two Letter state code (e.g, NY, CA, TX)",
-      validation: (Rule) => Rule.required().length(2).uppercase(),
+      description: "Two-letter state/UF code (e.g. SP, RJ, NY)",
+      validation: (Rule) => Rule.required().max(2).uppercase(),
     }),
     defineField({
-      name: "ZIP",
-      title: "ZIP Code",
+      name: "zip",
+      title: "ZIP / CEP",
       type: "string",
-      description: "Format: 12345 or 12345-6789",
-      validation: (Rule) =>
-        Rule.required()
-          .regex(/^\d{5}(-\d{4})?$/, { name: "ZIP code", invert: false })
-          .error("Please enter a valid ZIP code (e.g., 12345 or 12345-6789).")
-          .custom((zip: string | undefined) => {
-            if (!zip) return "ZIP code is required.";
-            if (!zip.match(/^\d{5}(-\d{4})?$/)) return "Please enter a valid ZIP code (e.g., 12345 or 12345-6789).";
-            return true;
-          }),
+      description: "Postal code, e.g. 01310-100 or 12345",
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "default",
@@ -87,7 +86,7 @@ export const addressType = defineType({
     },
     prepare({ title, subtitle, city, state, isDefault }) {
       return {
-        title: `${title}, ${isDefault ? "Default" : ""}`,
+        title: `${title}${isDefault ? " (Default)" : ""}`,
         subtitle: `${subtitle}, ${city}, ${state}`,
       };
     },

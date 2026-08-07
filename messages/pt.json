@@ -208,5 +208,33 @@
   },
   "deals": {
     "title": "Ofertas da Semana"
+  },
+  "addressModal": {
+    "title": "Novo Endereço",
+    "postalCode": "CEP",
+    "postalCodePlaceholder": "00000000",
+    "postalCodeHint": "Digite o CEP para preencher o endereço automaticamente.",
+    "postalCodeNotFound": "CEP não encontrado.",
+    "postalCodeError": "Erro ao buscar o CEP. Tente novamente.",
+    "street": "Logradouro e Bairro",
+    "streetPlaceholder": "Rua Exemplo, Centro",
+    "number": "Número",
+    "numberPlaceholder": "123",
+    "complement": "Complemento",
+    "complementPlaceholder": "Apto 4B",
+    "city": "Cidade",
+    "state": "UF",
+    "recipient": "Nome do destinatário",
+    "recipientPlaceholder": "João Silva",
+    "cancel": "Cancelar",
+    "save": "Salvar endereço",
+    "required": "*",
+    "manualHint": "A busca por código postal não está disponível para esta região. Preencha o endereço manualmente.",
+    "addressRequired": "Adicione um endereço de entrega para continuar.",
+    "savedSuccess": "Endereço salvo com sucesso!",
+    "saveError": "Erro ao salvar o endereço. Tente novamente.",
+    "deleteSuccess": "Endereço removido.",
+    "deleteError": "Erro ao remover o endereço. Tente novamente.",
+    "noAddresses": "Nenhum endereço cadastrado."
   }
 }

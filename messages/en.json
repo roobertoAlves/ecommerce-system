@@ -208,6 +208,34 @@
   },
   "deals": {
     "title": "Hot Deals of the Week"
+  },
+  "addressModal": {
+    "title": "New Address",
+    "postalCode": "Postal Code",
+    "postalCodePlaceholder": "Enter postal code",
+    "postalCodeHint": "Enter your postal code to auto-fill the address.",
+    "postalCodeNotFound": "Postal code not found.",
+    "postalCodeError": "Error looking up postal code. Try again.",
+    "street": "Street & District",
+    "streetPlaceholder": "123 Main St, Downtown",
+    "number": "Number",
+    "numberPlaceholder": "123",
+    "complement": "Apt / Suite",
+    "complementPlaceholder": "Apt 4B",
+    "city": "City",
+    "state": "State / Region",
+    "recipient": "Recipient Name",
+    "recipientPlaceholder": "John Smith",
+    "cancel": "Cancel",
+    "save": "Save Address",
+    "required": "*",
+    "manualHint": "Postal code lookup is not available for this region. Please fill in the address manually.",
+    "addressRequired": "Add a delivery address to continue.",
+    "savedSuccess": "Address saved successfully!",
+    "saveError": "Failed to save address. Please try again.",
+    "deleteSuccess": "Address removed.",
+    "deleteError": "Failed to remove address. Please try again.",
+    "noAddresses": "No addresses registered."
   }
 }
 

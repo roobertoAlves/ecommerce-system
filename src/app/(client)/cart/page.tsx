@@ -1,5 +1,6 @@
 "use client";
 
+import AddressModal, { LocalAddress } from "@/components/AddressModal";
 import Container from "@/components/Container";
 import EmptyCart from "@/components/EmptyCart";
 import NoAccess from "@/components/NoAccess";
@@ -14,11 +15,9 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useCurrency } from "@/context/CurrencyContext";
-import { Address } from "@/sanity.types";
-import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
 import { useAuth, useUser } from "@clerk/nextjs";
-import { ShoppingBag, Trash } from "lucide-react";
+import { ShoppingBag, Trash, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
@@ -30,7 +29,7 @@ import useStore from "../../../../store";
 
 function OrderSummaryPanel({
   selectedItems, groupedItemsLength, selectedSubTotal, selectedDiscount,
-  selectedTotal, rates, currency, loading, onCheckout,
+  selectedTotal, rates, currency, loading, hasAddress, onCheckout,
 }: {
   selectedItems: Array<{ quantity: number }>;
   groupedItemsLength: number;
@@ -40,9 +39,11 @@ function OrderSummaryPanel({
   rates: Record<string, number>;
   currency: SupportedCurrency;
   loading: boolean;
+  hasAddress: boolean;
   onCheckout: () => void;
 }) {
   const t = useTranslations("cart");
+  const tAddr = useTranslations("addressModal");
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between text-sm">
@@ -58,10 +59,13 @@ function OrderSummaryPanel({
         <span className="text-text-primary">{t("total")}</span>
         <PriceFormatter amount={selectedTotal * rates[currency]} currency={currency} className="text-lg font-bold text-primary" />
       </div>
+      {!hasAddress && (
+        <p className="text-xs text-danger font-medium">{tAddr("addressRequired")}</p>
+      )}
       <Button
         className="w-full rounded-full font-semibold tracking-wide"
         size="lg"
-        disabled={loading || selectedItems.length === 0}
+        disabled={loading || selectedItems.length === 0 || !hasAddress}
         onClick={onCheckout}
       >
         {loading ? t("processing") : selectedItems.length === 0 ? t("selectItemsCheckout") : `${t("checkout")} (${selectedItems.length})`}
@@ -72,14 +76,16 @@ function OrderSummaryPanel({
 
 const CartPage = () => {
   const t = useTranslations("cart");
+  const tAddr = useTranslations("addressModal");
   const { deleteCartProduct, getItemCount, resetCart } = useStore();
   const { currency, rates } = useCurrency();
   const [loading, setLoading] = useState(false);
   const groupedItems = useStore((state) => state.getGroupedItems());
   const { isSignedIn } = useAuth();
   const { user } = useUser();
-  const [addresses, setAddresses] = useState<Address[] | null>(null);
-  const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
+  const [addresses, setAddresses] = useState<LocalAddress[]>([]);
+  const [selectedAddress, setSelectedAddress] = useState<LocalAddress | null>(null);
+  const [showAddressModal, setShowAddressModal] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(
     () => new Set(groupedItems.map((i) => i.product._id)),
   );
@@ -115,12 +121,54 @@ const CartPage = () => {
   );
   const selectedDiscount = selectedSubTotal - selectedTotal;
 
+  // Load saved addresses for the current user from Sanity via API
   useEffect(() => {
-    client.fetch(`*[_type=="address"] | order(publishedAt desc)`).then((data) => {
-      setAddresses(data);
-      setSelectedAddress(data.find((a: Address) => a.default) ?? data[0] ?? null);
-    }).catch(console.error);
-  }, []);
+    if (!isSignedIn) return;
+    fetch("/api/addresses")
+      .then((res) => res.json())
+      .then((data: LocalAddress[]) => {
+        setAddresses(data);
+        setSelectedAddress(data.find((a) => a.default) ?? data[0] ?? null);
+      })
+      .catch(console.error);
+  }, [isSignedIn]);
+
+  // Save a new address to Sanity and update local state
+  const handleSaveAddress = async (addr: LocalAddress) => {
+    try {
+      const res = await fetch("/api/addresses", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(addr),
+      });
+      if (!res.ok) throw new Error("Failed to save address");
+      const saved: LocalAddress = await res.json();
+      setAddresses((prev) => [...prev, saved]);
+      setSelectedAddress(saved);
+      toast.success(tAddr("savedSuccess"));
+    } catch {
+      toast.error(tAddr("saveError"));
+    }
+  };
+
+  // Delete an address from Sanity and update local state
+  const handleDeleteAddress = async (id: string) => {
+    try {
+      const res = await fetch(`/api/addresses?id=${id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Failed to delete address");
+      setAddresses((prev) => {
+        const updated = prev.filter((a) => a._id !== id);
+        // If the deleted address was selected, auto-select the first remaining one
+        if (selectedAddress?._id === id) {
+          setSelectedAddress(updated[0] ?? null);
+        }
+        return updated;
+      });
+      toast.success(tAddr("deleteSuccess"));
+    } catch {
+      toast.error(tAddr("deleteError"));
+    }
+  };
 
   const handleResetCart = () => {
     if (!window.confirm(t("confirmResetCart"))) return;
@@ -130,6 +178,7 @@ const CartPage = () => {
 
   const handleCheckout = async () => {
     if (!selectedItems.length) { toast.error(t("selectItemsCheckout")); return; }
+    if (!selectedAddress) { toast.error(tAddr("addressRequired")); setShowAddressModal(true); return; }
     setLoading(true);
     try {
       const metadata: Metadata = {
@@ -261,37 +310,66 @@ const CartPage = () => {
                       selectedItems={selectedItems} groupedItemsLength={groupedItems.length}
                       selectedSubTotal={selectedSubTotal} selectedDiscount={selectedDiscount}
                       selectedTotal={selectedTotal} rates={rates} currency={currency}
-                      loading={loading} onCheckout={handleCheckout}
+                      loading={loading} hasAddress={!!selectedAddress} onCheckout={handleCheckout}
                     />
                   </div>
 
-                  {addresses && (
+                  {addresses.length > 0 && (
                     <div className="bg-surface rounded-md mt-5 border border-border">
                       <Card>
                         <CardHeader><CardTitle className="text-text-primary">{t("deliveryAddresses")}</CardTitle></CardHeader>
                         <CardContent>
-                          <RadioGroup defaultValue={addresses.find((a) => a.default)?._id.toString()}>
+                          <RadioGroup value={selectedAddress?._id ?? ""} onValueChange={(val) => setSelectedAddress(addresses.find((a) => a._id === val) ?? null)}>
                             {addresses.map((address) => (
                               <div
                                 key={address._id}
+                                className={`flex items-center gap-2 mb-3 p-2 rounded-lg border transition-colors cursor-pointer ${selectedAddress?._id === address._id ? "border-primary bg-primary/5" : "border-border"}`}
                                 onClick={() => setSelectedAddress(address)}
-                                className={`flex items-center space-x-2 mb-4 cursor-pointer ${selectedAddress?._id === address._id ? "text-primary" : "text-text-primary"}`}
                               >
-                                <RadioGroupItem value={address._id.toString()} />
-                                <Label className="grid gap-1.5 flex-1 cursor-pointer">
-                                  <span className="font-semibold">{address.name}</span>
-                                  <span className="text-sm text-text-muted">
-                                    {address.address}, {address.city}, {address.state} {address.zip}
+                                <RadioGroupItem value={address._id} className="shrink-0" />
+                                <Label className="grid gap-0.5 flex-1 cursor-pointer">
+                                  <span className="font-semibold text-text-primary">{address.name}</span>
+                                  <span className="text-xs text-text-muted">
+                                    {address.address}, {address.city}, {address.state} — {address.zip}
                                   </span>
                                 </Label>
+                                <button
+                                  onClick={(e) => { e.stopPropagation(); handleDeleteAddress(address._id); }}
+                                  className="shrink-0 text-text-muted hover:text-danger transition-colors p-1 rounded"
+                                  aria-label="Remover endereço"
+                                >
+                                  <X className="w-4 h-4" />
+                                </button>
                               </div>
                             ))}
                           </RadioGroup>
-                          <Button variant="outline" className="w-full mt-4">{t("addNewAddress")}</Button>
+                          <Button variant="outline" className="w-full mt-2" onClick={() => setShowAddressModal(true)}>
+                            {t("addNewAddress")}
+                          </Button>
                         </CardContent>
                       </Card>
                     </div>
                   )}
+
+                  {addresses.length === 0 && (
+                    <div className="bg-surface rounded-md mt-5 border border-border">
+                      <Card>
+                        <CardHeader><CardTitle className="text-text-primary">{t("deliveryAddresses")}</CardTitle></CardHeader>
+                        <CardContent>
+                          <p className="text-sm text-text-muted mb-4">{tAddr("noAddresses")}</p>
+                          <Button variant="outline" className="w-full" onClick={() => setShowAddressModal(true)}>
+                            {t("addNewAddress")}
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  )}
+
+                  <AddressModal
+                    open={showAddressModal}
+                    onClose={() => setShowAddressModal(false)}
+                    onSave={handleSaveAddress}
+                  />
                 </div>
               </div>
             </>
@@ -308,7 +386,7 @@ const CartPage = () => {
                   selectedItems={selectedItems} groupedItemsLength={groupedItems.length}
                   selectedSubTotal={selectedSubTotal} selectedDiscount={selectedDiscount}
                   selectedTotal={selectedTotal} rates={rates} currency={currency}
-                  loading={loading} onCheckout={handleCheckout}
+                  loading={loading} hasAddress={!!selectedAddress} onCheckout={handleCheckout}
                 />
               </div>
             </div>

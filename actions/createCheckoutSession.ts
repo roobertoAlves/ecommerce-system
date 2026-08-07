@@ -12,7 +12,13 @@ export interface Metadata {
   customerName: string;
   customerEmail: string;
   clerkUserId?: string;
-  address?: Address | null;
+  address?: {
+    name?: string;
+    address?: string;
+    city?: string;
+    state?: string;
+    zip?: string;
+  } | Address | null;
 }
 
 export interface GroupedCartItems {
@@ -52,7 +58,7 @@ export async function createCheckoutSession(
             },
           }
         : {}),
-      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}&orderNumber=${metadata.orderNumber}`,
+     success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}&orderNumber=${metadata.orderNumber}`,
       cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/cart`,
       line_items: items?.map((item) => ({
         price_data: {
