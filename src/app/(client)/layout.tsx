@@ -1,3 +1,4 @@
+import AuthSync from "@/components/AuthSync";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { CurrencyProvider } from "@/context/CurrencyContext";
@@ -35,6 +36,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             className={`${poppins.variable} ${jetbrainsMono.variable} flex flex-col min-h-screen font-poppins`}
           >
             <Header />
+            <AuthSync />
             <main className="flex-1">{children}</main>
             <Footer />
           </div>
