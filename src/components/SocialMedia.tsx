@@ -1,10 +1,9 @@
 "use client";
 import { cn } from "@/lib/utils";
 import {
+  EnvelopeSimpleIcon,
   GithubLogoIcon,
   LinkedinLogoIcon,
-  XLogoIcon,
-  YoutubeLogoIcon,
 } from "@phosphor-icons/react";
 import Link from "next/link";
 import { useState } from "react";
@@ -16,10 +15,9 @@ interface Props {
 }
 
 const socialLink = [
-  { title: "Youtube", href: "https://www.youtube.com/@shopify", icon: <YoutubeLogoIcon className="w-5 h-5" /> },
-  { title: "Github", href: "https://github.com/shopify", icon: <GithubLogoIcon className="w-5 h-5" /> },
-  { title: "Twitter/X", href: "https://twitter.com/shopify", icon: <XLogoIcon className="w-5 h-5" /> },
-  { title: "Linkedin", href: "https://www.linkedin.com/company/shopify", icon: <LinkedinLogoIcon className="w-5 h-5" /> },
+  { title: "LinkedIn", href: "https://www.linkedin.com/in/beto-damasceno/", icon: <LinkedinLogoIcon className="w-5 h-5" /> },
+  { title: "GitHub", href: "https://github.com/roobertoAlves", icon: <GithubLogoIcon className="w-5 h-5" /> },
+  { title: "Email", href: "mailto:jbetodamasceno@gmail.com", icon: <EnvelopeSimpleIcon className="w-5 h-5" /> },
 ];
 
 const SocialMedia = ({ className, iconClassName, tooltipClassName }: Props) => {
